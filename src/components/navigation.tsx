@@ -1,0 +1,37 @@
+import { Link, useLocation } from "@tanstack/react-router";
+import { GitPullRequest } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+export const Nav = ({ isMobile }: { isMobile?: boolean }) => {
+	const location = useLocation();
+
+	const linkStyle =
+		"px-4 py-2 rounded-lg text-sm transition-color hover:bg-gray-50 dark:hover:bg-gray-900/50";
+	const activeLinkStyle = "bg-gray-100 dark:bg-gray-900";
+
+	return (
+		<nav className={cn("flex gap-1", isMobile && "flex-col p-5 gap-2")}>
+			{isMobile && (
+				<div className="flex gap-1">
+					<GitPullRequest className="w-6 h-6" />
+					<h1 className="text-xl font-semibold">GitHub Issues Tracker</h1>
+				</div>
+			)}
+			<Link
+				to="/"
+				className={cn(linkStyle, location.pathname === "/" && activeLinkStyle)}
+			>
+				Pinned
+			</Link>
+			<Link
+				to="/issues"
+				className={cn(
+					linkStyle,
+					location.pathname === "/issues" && activeLinkStyle,
+				)}
+			>
+				Issues
+			</Link>
+		</nav>
+	);
+};
