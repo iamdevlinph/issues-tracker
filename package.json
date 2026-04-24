@@ -12,8 +12,10 @@
     "test": "vitest run",
     "format": "biome format --write",
     "lint": "biome lint",
-    "check": "biome check --fix",
-    "deploy": "npm run build && wrangler deploy"
+    "check": "biome check",
+    "fix": "biome check --fix",
+    "deploy": "npm run build && wrangler deploy",
+    "prepare": "husky"
   },
   "dependencies": {
     "@cloudflare/vite-plugin": "^1.26.0",
@@ -45,7 +47,9 @@
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "^6.0.1",
+    "husky": "^9.1.7",
     "jsdom": "^28.1.0",
+    "lint-staged": "^16.4.0",
     "typescript": "^5.7.2",
     "vite": "^8.0.0",
     "vitest": "^3.0.5",
