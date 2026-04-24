@@ -7,7 +7,7 @@ export const Nav = ({ isMobile }: { isMobile?: boolean }) => {
 
 	const linkStyle =
 		"px-4 py-2 rounded-lg text-sm transition-color hover:bg-gray-50 dark:hover:bg-gray-900/50";
-	const activeLinkStyle = "bg-gray-100 dark:bg-gray-900";
+	const activeLinkStyle = "bg-gray-200 dark:bg-gray-700";
 
 	return (
 		<nav className={cn("flex gap-1", isMobile && "flex-col p-5 gap-2")}>
