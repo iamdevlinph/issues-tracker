@@ -5,9 +5,12 @@ import { cn } from "@/lib/utils";
 export const Nav = ({ isMobile }: { isMobile?: boolean }) => {
 	const location = useLocation();
 
-	const linkStyle =
-		"px-4 py-2 rounded-lg text-sm transition-color hover:bg-gray-50 dark:hover:bg-gray-900/50";
-	const activeLinkStyle = "bg-gray-200 dark:bg-gray-700";
+	const linkStyle = "px-4 py-2 rounded-lg text-sm transition-color";
+	const activeLinkStyle =
+		"bg-gray-200 dark:bg-gray-700 hover:bg-gray-200/80 dark:hover:bg-gray-700/80";
+	const hoverStyle = "hover:bg-gray-50 dark:hover:bg-gray-700/50";
+
+	const combinedLinkStyle = cn(linkStyle, hoverStyle);
 
 	return (
 		<nav className={cn("flex gap-1", isMobile && "flex-col p-5 gap-2")}>
@@ -19,14 +22,17 @@ export const Nav = ({ isMobile }: { isMobile?: boolean }) => {
 			)}
 			<Link
 				to="/"
-				className={cn(linkStyle, location.pathname === "/" && activeLinkStyle)}
+				className={cn(
+					combinedLinkStyle,
+					location.pathname === "/" && activeLinkStyle,
+				)}
 			>
 				Pinned
 			</Link>
 			<Link
 				to="/issues"
 				className={cn(
-					linkStyle,
+					combinedLinkStyle,
 					location.pathname === "/issues" && activeLinkStyle,
 				)}
 			>
@@ -35,7 +41,7 @@ export const Nav = ({ isMobile }: { isMobile?: boolean }) => {
 			<Link
 				to="/repositories"
 				className={cn(
-					linkStyle,
+					combinedLinkStyle,
 					location.pathname === "/repositories" && activeLinkStyle,
 				)}
 			>
