@@ -32,6 +32,15 @@ export const Nav = ({ isMobile }: { isMobile?: boolean }) => {
 			>
 				Issues
 			</Link>
+			<Link
+				to="/repositories"
+				className={cn(
+					linkStyle,
+					location.pathname === "/repositories" && activeLinkStyle,
+				)}
+			>
+				Repositories
+			</Link>
 		</nav>
 	);
 };
