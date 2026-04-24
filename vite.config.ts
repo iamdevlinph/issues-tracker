@@ -10,7 +10,9 @@ const config = defineConfig({
 	resolve: { tsconfigPaths: true },
 	plugins: [
 		devtools(),
-		cloudflare({ viteEnvironment: { name: "ssr" } }),
+		cloudflare({
+			viteEnvironment: { name: "ssr", childEnvironments: ["rsc"] },
+		}),
 		tailwindcss(),
 		tanstackStart({
 			rsc: {
