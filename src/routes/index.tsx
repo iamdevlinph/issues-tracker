@@ -10,6 +10,13 @@ export const Route = createFileRoute("/")({
 	staticData: {
 		label: "Starred",
 	},
+	head: () => ({
+		meta: [
+			{
+				title: "Pinned Issues",
+			},
+		],
+	}),
 });
 
 function Index() {

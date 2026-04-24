@@ -9,6 +9,13 @@ export const Route = createFileRoute("/issues")({
 	staticData: {
 		label: "Issues",
 	},
+	head: () => ({
+		meta: [
+			{
+				title: "All Issues",
+			},
+		],
+	}),
 });
 
 function Issues() {
