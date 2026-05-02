@@ -10,7 +10,6 @@ export function ModeToggleBtn() {
 	return (
 		<button
 			onClick={() => {
-				console.log("mode toggle btn", theme);
 				setTheme(darkMode ? "light" : "dark");
 			}}
 			className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors"

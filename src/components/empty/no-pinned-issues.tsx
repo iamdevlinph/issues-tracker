@@ -1,13 +1,16 @@
-import { EmptySection } from "@/components/empty/empty";
-import { GithubLogin } from "@/components/login-github";
+import { Link } from "@tanstack/react-router";
+import { EmptySection } from "@/components/empty/empty-section";
+import { Button } from "@/components/ui/button";
 
 export const NoPinnedIssues = () => {
 	return (
 		<EmptySection
 			title="No Pinned Issues"
-			description="You don't have any pinned issues yet. Start by logging in with your Github account."
+			description="You don't have any pinned issues yet. Start by managing your Github account."
 		>
-			<GithubLogin />
+			<Link to="/account">
+				<Button variant="outline">Account</Button>
+			</Link>
 		</EmptySection>
 	);
 };

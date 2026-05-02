@@ -2,6 +2,14 @@ Welcome to your new TanStack Start app!
 
 # Getting Started
 
+## FAQ
+
+1. .pem private key generate from the github app is in pkcs#1 format. Convert to pkcs #8
+
+```bash
+openssl pkey -in input.private-key.pem -out output.pkcs8.pem
+```
+
 To run this application:
 
 ```bash

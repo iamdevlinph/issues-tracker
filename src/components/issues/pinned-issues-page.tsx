@@ -1,8 +1,8 @@
 import { Star } from "lucide-react";
 import { useState } from "react";
 import { NoPinnedIssues } from "@/components/empty/no-pinned-issues";
-import { IssueCard } from "@/components/issues/issue-card";
 import type { Issue } from "@/components/issues/types";
+import { PageTitle } from "@/components/page-title";
 import { mockPinnedIssues } from "@/lib/dummy-data";
 
 export const PinnedIssuesPage = () => {
@@ -25,12 +25,10 @@ export const PinnedIssuesPage = () => {
 
 	return (
 		<>
-			<div className="mb-6">
-				<h2 className="text-2xl font-semibold mb-2">Pinned Issues</h2>
-				<p className="text-sm text-gray-500 dark:text-gray-400">
-					Your starred issues organized by repository
-				</p>
-			</div>
+			<PageTitle
+				title="Pinned Issues"
+				description="Your starred issues organized by repository"
+			/>
 
 			<NoPinnedIssues />
 
@@ -49,14 +47,14 @@ export const PinnedIssuesPage = () => {
 								{repo}
 							</h3>
 							<div className="space-y-3">
-								{issues.map((issue) => (
+								{/* {issues.map((issue) => (
 									<IssueCard
 										key={issue.id}
 										issue={issue}
 										isPinned={true}
 										onTogglePin={togglePin}
 									/>
-								))}
+								))} */}
 							</div>
 						</div>
 					))}

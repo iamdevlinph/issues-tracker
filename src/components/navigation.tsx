@@ -39,13 +39,13 @@ export const Nav = ({ isMobile }: { isMobile?: boolean }) => {
 				Issues
 			</Link>
 			<Link
-				to="/repositories"
+				to="/account"
 				className={cn(
 					combinedLinkStyle,
-					location.pathname === "/repositories" && activeLinkStyle,
+					location.pathname === "/account" && activeLinkStyle,
 				)}
 			>
-				Repositories
+				Account
 			</Link>
 		</nav>
 	);

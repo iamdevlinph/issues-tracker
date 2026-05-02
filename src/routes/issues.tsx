@@ -13,6 +13,20 @@ export const Route = createFileRoute("/issues")({
 			},
 		],
 	}),
+	// server: {
+	// 	handlers: {
+	// 		GET: async ({ request }) => {
+	// 			const installationId = useAuthStore((s) => s.installationId);
+
+	// 			if (!installationId) {
+	// 				return Response.json([]);
+	// 			}
+
+	// 			const repos = await getRepositories(installationId);
+	// 			console.info("🍉debuu ~ repos:", repos);
+	// 		},
+	// 	},
+	// },
 });
 
 function Issues() {

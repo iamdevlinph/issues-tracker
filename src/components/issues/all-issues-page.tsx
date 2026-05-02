@@ -1,86 +1,143 @@
-import { Search } from "lucide-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
+import { getIssuesFn } from "@/actions/get-issues.function";
+import { getRepositoriesFn } from "@/actions/get-repositories.function";
+import { NoRepository } from "@/components/empty/no-repository";
 import { NotLoggedIn } from "@/components/empty/not-logged-in";
 import { IssueCard } from "@/components/issues/issue-card";
-import { mockIssues } from "@/lib/dummy-data";
+import { PageTitle } from "@/components/page-title";
+import {
+	Combobox,
+	ComboboxContent,
+	ComboboxEmpty,
+	ComboboxInput,
+	ComboboxItem,
+	ComboboxList,
+} from "@/components/ui/combobox";
+import { useAuthStore } from "@/stores/auth-store";
 
 export const AllIssuesPage = () => {
-	const [pinnedIds, setPinnedIds] = useState<number[]>([1, 2, 3, 4, 5]);
-	const [searchQuery, setSearchQuery] = useState("");
-	const [selectedRepo, setSelectedRepo] = useState<string>("all");
+	const queryClient = useQueryClient();
+	const installationId = useAuthStore((s) => s.installationId);
+	const authenticated = useAuthStore((s) => s.authenticated);
+	const getRepos = useServerFn(getRepositoriesFn);
+	const getIssues = useServerFn(getIssuesFn);
+	const [selectedRepo, setRepo] = useState("");
 
-	const togglePin = (id: number) => {
-		setPinnedIds((prev) =>
-			prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
-		);
-	};
+	const repositoriesData = useQuery({
+		queryKey: ["repositories"],
+		queryFn: async () => {
+			if (!installationId) {
+				return [];
+			}
 
-	const repositories = [
-		"all",
-		...Array.from(new Set(mockIssues.map((i) => i.repository))),
-	];
+			return getRepos({
+				data: { installationId },
+			});
+		},
+		enabled: !!installationId,
+		initialData: [],
+		refetchOnWindowFocus: true,
+	});
 
-	const filteredIssues = mockIssues.filter((issue) => {
-		const matchesSearch = issue.title
-			.toLowerCase()
-			.includes(searchQuery.toLowerCase());
-		const matchesRepo =
-			selectedRepo === "all" || issue.repository === selectedRepo;
-		return matchesSearch && matchesRepo;
+	const issuesData = useQuery({
+		queryKey: ["issues", selectedRepo],
+		queryFn: async () => {
+			if (!installationId) {
+				return [];
+			}
+
+			const [owner, repo] = selectedRepo.split("/");
+			console.info("🍉debuu ~ AllIssuesPage ~ [owner, repo]:", [owner, repo]);
+
+			const issues = await getIssues({
+				data: { installationId, owner, repo },
+			});
+			console.info("🍉debuu ~ AllIssuesPage ~ issues:", issues);
+			return issues;
+		},
+		enabled: !!selectedRepo,
+		initialData: [],
 	});
 
 	return (
 		<>
-			<div className="mb-6">
-				<h2 className="text-2xl font-semibold mb-2">All Issues</h2>
-				<p className="text-sm text-gray-500 dark:text-gray-400">
-					Browse and manage issues across all repositories
-				</p>
-			</div>
+			<PageTitle
+				title="All Issues"
+				description="Browse and manage issues across all repositories"
+			/>
 
-			<NotLoggedIn />
+			{!repositoriesData.isFetched && <div>Loading...</div>}
 
-			<div className="mb-6 flex gap-4">
-				<div className="flex-1 relative">
-					<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-					<input
-						type="text"
-						placeholder="Search issues..."
-						value={searchQuery}
-						onChange={(e) => setSearchQuery(e.target.value)}
-						className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-800 rounded-lg bg-white dark:bg-gray-950 focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-700"
-					/>
+			{repositoriesData.isFetched && (
+				<div>
+					{!authenticated && <NotLoggedIn />}
+
+					{authenticated && repositoriesData.data.length === 0 && (
+						<NoRepository />
+					)}
+
+					{authenticated && repositoriesData.data.length > 0 && (
+						<>
+							<Combobox
+								items={repositoriesData.data}
+								onValueChange={(e) => {
+									setRepo(e as string);
+								}}
+							>
+								<ComboboxInput
+									placeholder="Select a repository"
+									className="w-max"
+								/>
+								<ComboboxContent>
+									<ComboboxEmpty>No items found.</ComboboxEmpty>
+									<ComboboxList>
+										{(item: (typeof repositoriesData.data)[number]) => (
+											<ComboboxItem key={item.id} value={item.full_name}>
+												{item.full_name}
+											</ComboboxItem>
+										)}
+									</ComboboxList>
+								</ComboboxContent>
+							</Combobox>
+
+							<div className="space-y-3 mt-5">
+								{issuesData.data.map((issue, idx) => {
+									return (
+										<IssueCard
+											key={issue.id}
+											issue={issue}
+											// isPinned={pinnedIds.includes(issue.id)}
+											isPinned={idx % 2 === 0}
+											options={{ showRepository: true }}
+											onTogglePin={() => {}}
+										/>
+									);
+								})}
+							</div>
+
+							{/* <div className="space-y-3">
+								{filteredIssues.length === 0 ? (
+									<div className="text-center py-12 text-gray-500 dark:text-gray-400">
+										No issues found
+									</div>
+								) : (
+									filteredIssues.map((issue) => (
+										<IssueCard
+											key={issue.id}
+											issue={issue}
+											isPinned={pinnedIds.includes(issue.id)}
+											onTogglePin={togglePin}
+											options={{ showRepository: true }}
+										/>
+									))
+								)}
+							</div> */}
+						</>
+					)}
 				</div>
-				<select
-					value={selectedRepo}
-					onChange={(e) => setSelectedRepo(e.target.value)}
-					className="px-4 py-2 border border-gray-200 dark:border-gray-800 rounded-lg bg-white dark:bg-gray-950 focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-700"
-				>
-					{repositories.map((repo) => (
-						<option key={repo} value={repo}>
-							{repo === "all" ? "All Repositories" : repo}
-						</option>
-					))}
-				</select>
-			</div>
-
-			<div className="space-y-3">
-				{filteredIssues.length === 0 ? (
-					<div className="text-center py-12 text-gray-500 dark:text-gray-400">
-						No issues found
-					</div>
-				) : (
-					filteredIssues.map((issue) => (
-						<IssueCard
-							key={issue.id}
-							issue={issue}
-							isPinned={pinnedIds.includes(issue.id)}
-							onTogglePin={togglePin}
-							options={{ showRepository: true }}
-						/>
-					))
-				)}
-			</div>
+			)}
 		</>
 	);
 };
