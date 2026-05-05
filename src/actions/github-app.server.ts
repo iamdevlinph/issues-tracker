@@ -5,6 +5,11 @@ import {
 import { createServerOnlyFn } from "@tanstack/react-start";
 import { Octokit } from "octokit";
 
+// https://github.com/octokit/plugin-throttling.js/issues/794#issue-3061123269
+Octokit.plugins = Octokit.plugins.filter(
+	(plugin) => plugin.name !== "throttling",
+);
+
 const getAppPrivateKey = createServerOnlyFn(() => process.env.APP_PRIVATE_KEY);
 
 export const appOctokit = new Octokit({
