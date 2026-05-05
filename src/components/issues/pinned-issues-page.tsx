@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { NoPinnedIssues } from "@/components/empty/no-pinned-issues";
+import { NotLoggedIn } from "@/components/empty/not-logged-in";
 import { IssueCard } from "@/components/issues/issue-card";
 import { PageTitle } from "@/components/page-title";
 import { useAuthStore } from "@/stores/auth-store";
@@ -7,6 +8,7 @@ import { useAuthStore } from "@/stores/auth-store";
 export const PinnedIssuesPage = () => {
 	const pinnedRepos = useAuthStore((s) => s.pinnedRepos);
 	const pinnedIssues = useAuthStore((s) => s.pinnedIssues);
+	const authenticated = useAuthStore((s) => s.authenticated);
 	const hasPinnedIssues = (pinnedIssues.all ?? []).length > 0;
 
 	return (
@@ -16,9 +18,11 @@ export const PinnedIssuesPage = () => {
 				description="Your starred issues organized by repository"
 			/>
 
-			{!hasPinnedIssues ? (
-				<NoPinnedIssues />
-			) : (
+			{!authenticated && <NotLoggedIn />}
+
+			{authenticated && !hasPinnedIssues && <NoPinnedIssues />}
+
+			{authenticated && hasPinnedIssues && (
 				<div className="space-y-8">
 					{pinnedRepos.all.map((repoName) => {
 						const repo = pinnedRepos.byName[repoName];
