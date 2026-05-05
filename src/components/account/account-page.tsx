@@ -47,7 +47,7 @@ export const AccountPage = () => {
 
 						<Alert variant="destructive" className="max-w-md">
 							<AlertCircleIcon />
-							<AlertTitle>Logout</AlertTitle>
+							<AlertTitle>Before you logout</AlertTitle>
 							<AlertDescription>
 								Logging out will also clear pinned issues. You will need to pin
 								them again.
