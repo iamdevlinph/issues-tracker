@@ -1,6 +1,7 @@
 import { Calendar, MessageSquare, Star } from "lucide-react";
 import type { GetIssuesFnType } from "@/actions/get-issues.function";
 import { getRepoFromURL } from "@/lib/get-repo-from-url";
+import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/stores/auth-store";
 
 type IssueCardProps = {
@@ -56,7 +57,10 @@ export const IssueCard = ({ issue, isPinned, options }: IssueCardProps) => {
 				</div>
 				<button
 					onClick={() => (isPinned ? unpinIssue(issue.id) : pinIssue(issue))}
-					className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors shrink-0"
+					className={cn(
+						"p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors shrink-0",
+						"active:animate-ping",
+					)}
 					aria-label={isPinned ? "Unpin issue" : "Pin issue"}
 					type="button"
 				>
