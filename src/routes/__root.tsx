@@ -43,7 +43,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 					<QueryClientProvider client={queryClient}>
 						<Header />
 
-						<main className="max-w-5xl lg:mx-auto mt-20 mx-6">{children}</main>
+						<main className="max-w-5xl lg:mx-auto mt-20 mx-6 pb-20">
+							{children}
+						</main>
 					</QueryClientProvider>
 				</ThemeProvider>
 				<TanStackDevtools
