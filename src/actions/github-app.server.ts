@@ -10,6 +10,8 @@ export const appOctokit = new Octokit({
 	auth: {
 		appId: process.env.APP_ID,
 		privateKey: process.env.APP_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+		// clientId: process.env.VITE_CLIENT_ID,
+		// clientSecret: process.env.CLIENT_SECRET,
 	},
 });
 

@@ -8,51 +8,64 @@ export const Route = createFileRoute("/callback")({
 	server: {
 		handlers: {
 			GET: async ({ request }) => {
-				const url = request.url;
+				console.log("🍉debuu ~ request:", JSON.stringify(request, null, 2));
+				try {
+					const url = request.url;
+					console.log("🍉debuu ~ url:", url);
 
-				const params = new URL(url).searchParams;
-				const code = params.get("code");
+					const params = new URL(url).searchParams;
+					console.log("🍉debuu ~ params:", params);
+					const code = params.get("code");
 
-				if (!code) {
-					return new Response("No code provided");
+					if (!code) {
+						return new Response("No code provided");
+					}
+
+					// Step 1 - get access_token from user login code after authentication
+					const access_token = await accessToken(code);
+					const token = access_token.access_token;
+					console.log("🍉debuu ~ token:", token);
+
+					// Step 2
+					const oauth = oauthOctokit(token);
+
+					// Step 3
+					const user = await oauth.rest.users.getAuthenticated();
+					console.log("🍉debuu ~ user:", JSON.stringify(user, null, 2));
+
+					// Step 4
+					const installations = await getInstallations(token);
+
+					// Step 5
+					if (installations.installations.length === 0) {
+						const installUrl = `https://github.com/apps/${process.env.APP_NAME}/installations/new`;
+
+						return Response.redirect(installUrl, 302);
+					}
+
+					const installationId = installations.installations[0].id;
+
+					// Step 6 - if already has installation or repositories selected
+
+					const redirectUrl =
+						`/account` +
+						`?login=${user.data.login}` +
+						`&installationId=${installationId}`;
+
+					return new Response(null, {
+						// status: 302,
+						headers: {
+							Location: redirectUrl,
+							"Set-Cookie": setSession(token),
+						},
+					});
+				} catch (e) {
+					console.log("🍉debuu ~ e:", (e as Error).message);
+
+					return new Response("Something went wrong", {
+						status: 500,
+					});
 				}
-
-				// Step 1 - get access_token from user login code after authentication
-				const access_token = await accessToken(code);
-				const token = access_token.access_token;
-
-				// Step 2
-				const oauth = oauthOctokit(token);
-
-				// Step 3
-				const user = await oauth.rest.users.getAuthenticated();
-
-				// Step 4
-				const installations = await getInstallations(token);
-
-				// Step 5
-				if (installations.installations.length === 0) {
-					const installUrl = `https://github.com/apps/${process.env.APP_NAME}/installations/new`;
-
-					return Response.redirect(installUrl, 302);
-				}
-
-				const installationId = installations.installations[0].id;
-
-				// Step 6 - if already has installation or repositories selected
-
-				const redirectUrl =
-					`/account` +
-					`?login=${user.data.login}` +
-					`&installationId=${installationId}`;
-
-				return new Response(null, {
-					status: 302,
-					headers: {
-						Location: redirectUrl,
-						"Set-Cookie": setSession(token),
-					},
-				});
 			},
 		},
 	},
