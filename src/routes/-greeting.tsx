@@ -1,4 +1,3 @@
-import os from "node:os";
 import { useQuery } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import {
@@ -8,7 +7,7 @@ import {
 
 // Create a server function
 const getGreeting = createServerFn().handler(async () => {
-	const _hostname = os.hostname();
+	// const _hostname = os.hostname();
 	// Create an RSC readable stream
 	return renderToReadableStream(
 		// Return JSX
