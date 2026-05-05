@@ -53,7 +53,25 @@ export const IssueCard = ({ issue, isPinned, options }: IssueCardProps) => {
 								{issue.title}
 							</h3>
 						</a>
-						<div className="flex gap-1.5 shrink-0"></div>
+						<div className="flex gap-1.5 shrink-0">
+							{issue.labels.map((label) => {
+								const { id, color, name } = label as Exclude<
+									GetIssuesFnType["labels"][number],
+									string
+								>;
+								return (
+									<span
+										key={id}
+										className={cn(
+											"px-2 py-0.5 bg-mist-700 dark:bg-gray-800 text-xs rounded-full whitespace-nowrap",
+											`text-[#${color}]`,
+										)}
+									>
+										{name}
+									</span>
+								);
+							})}
+						</div>
 					</div>
 				</div>
 				<motion.button
