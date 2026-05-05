@@ -17,7 +17,6 @@ export const getRepositoriesFn = createServerFn()
 			const repos = await octokit.rest.apps.listReposAccessibleToInstallation({
 				per_page: 100,
 			});
-			console.log("🍉debuu ~ repos:", repos);
 
 			repositories = [...repos.data.repositories];
 
