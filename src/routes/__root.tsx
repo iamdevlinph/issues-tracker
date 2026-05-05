@@ -4,6 +4,7 @@ import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
 import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { ThemeProvider } from "@/components/themes/theme-provider";
+import { GC_TIME, STALE_TIME } from "@/constants";
 import { AppProvider } from "@/context/app-provider";
 import Header from "../components/header";
 import appCss from "../styles.css?url";
@@ -11,8 +12,8 @@ import appCss from "../styles.css?url";
 const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
-			staleTime: 2 * 60 * 10000, // 2 mins
-			gcTime: 2 * 60 * 10000, // 2 mins
+			staleTime: STALE_TIME,
+			gcTime: GC_TIME,
 		},
 	},
 });
