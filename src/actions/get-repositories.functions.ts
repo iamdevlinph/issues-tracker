@@ -8,7 +8,9 @@ const GetRepositoriesSchema = z.object({
 
 export const getRepositoriesFn = createServerFn()
 	.inputValidator(GetRepositoriesSchema)
+	// .inputValidator((data: { installationId: number }) => data)
 	.handler(async ({ data }) => {
+		console.log("🍉debuu ~ getRepositoriesFn:", data);
 		try {
 			let repositories = [];
 
