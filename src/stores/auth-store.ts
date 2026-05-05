@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { GetIssuesFnType } from "@/actions/get-issues.function";
-import type { GetRepositoriesFnType } from "@/actions/get-repositories.function";
+import type { GetIssuesFnType } from "@/actions/get-issues.functions";
+import type { GetRepositoriesFnType } from "@/actions/get-repositories.functions";
 import { getRepoFromURL } from "@/lib/get-repo-from-url";
 
 export type Repo = {
@@ -146,7 +146,7 @@ export const useAuthStore = create<AuthState>()(
 			logout: () => set({ ...initialState }),
 		}),
 		{
-			name: "github-auth-v3",
+			name: "issues-tracker-app",
 		},
 	),
 );

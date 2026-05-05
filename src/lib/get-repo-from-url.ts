@@ -1,4 +1,4 @@
-import type { GetIssuesFnType } from "@/actions/get-issues.function";
+import type { GetIssuesFnType } from "@/actions/get-issues.functions";
 
 export const getRepoFromURL = (url: GetIssuesFnType["repository_url"]) => {
 	const repoSplit = url.split("/");

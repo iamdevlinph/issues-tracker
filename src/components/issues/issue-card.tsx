@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Calendar, MessageSquare, Star } from "lucide-react";
-import type { GetIssuesFnType } from "@/actions/get-issues.function";
+import type { GetIssuesFnType } from "@/actions/get-issues.functions";
 import { getRepoFromURL } from "@/lib/get-repo-from-url";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/stores/auth-store";

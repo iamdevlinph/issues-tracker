@@ -1,9 +1,10 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "issues-tracker-app",
-  "compatibility_date": "2025-09-02",
+  "compatibility_date": "2026-04-28",
   "compatibility_flags": ["nodejs_compat"],
   "main": "@tanstack/react-start/server-entry",
+  // "main": "src/server.ts",
   "routes": [
     {
       "pattern": "issues-tracker.devlin.ph",
@@ -11,7 +12,7 @@
     }
   ],
   "observability": {
-    "enabled": false,
+    "enabled": true,
     "head_sampling_rate": 1,
     "logs": {
       "enabled": true,
@@ -24,5 +25,7 @@
       "persist": true,
       "head_sampling_rate": 1
     }
-  }
+  },
+  "workers_dev": true,
+  "preview_urls": true,
 }

@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
-import { getIssuesFn } from "@/actions/get-issues.function";
+import { getIssuesFn } from "@/actions/get-issues.functions";
 import {
 	type GetRepositoriesFnType,
 	getRepositoriesFn,
-} from "@/actions/get-repositories.function";
+} from "@/actions/get-repositories.functions";
 import { NoRepository } from "@/components/empty/no-repository";
 import { NotLoggedIn } from "@/components/empty/not-logged-in";
 import { IssueCard } from "@/components/issues/issue-card";
