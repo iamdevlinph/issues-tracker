@@ -1,5 +1,6 @@
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
 import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { ThemeProvider } from "@/components/themes/theme-provider";
@@ -7,7 +8,14 @@ import { AppProvider } from "@/context/app-provider";
 import Header from "../components/header";
 import appCss from "../styles.css?url";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			staleTime: 2 * 60 * 10000, // 2 mins
+			gcTime: 2 * 60 * 10000, // 2 mins
+		},
+	},
+});
 
 export const Route = createRootRoute({
 	head: () => ({
@@ -48,20 +56,26 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 							<main className="max-w-5xl lg:mx-auto mt-20 mx-6 pb-20">
 								{children}
 							</main>
+
+							<TanStackDevtools
+								config={{
+									position: "bottom-right",
+								}}
+								plugins={[
+									{
+										name: "Tanstack Router",
+										render: <TanStackRouterDevtoolsPanel />,
+									},
+									{
+										name: "TanStack Query",
+										render: <ReactQueryDevtoolsPanel />,
+									},
+								]}
+							/>
 						</QueryClientProvider>
 					</AppProvider>
 				</ThemeProvider>
-				<TanStackDevtools
-					config={{
-						position: "bottom-right",
-					}}
-					plugins={[
-						{
-							name: "Tanstack Router",
-							render: <TanStackRouterDevtoolsPanel />,
-						},
-					]}
-				/>
+
 				<Scripts />
 			</body>
 		</html>

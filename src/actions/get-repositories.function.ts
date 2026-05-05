@@ -18,3 +18,7 @@ export const getRepositoriesFn = createServerFn()
 
 		return repos.data.repositories;
 	});
+
+export type GetRepositoriesFnType = Awaited<
+	ReturnType<typeof getRepositoriesFn>
+>[number];

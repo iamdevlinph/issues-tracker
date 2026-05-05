@@ -2,7 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { getIssuesFn } from "@/actions/get-issues.function";
-import { getRepositoriesFn } from "@/actions/get-repositories.function";
+import {
+	type GetRepositoriesFnType,
+	getRepositoriesFn,
+} from "@/actions/get-repositories.function";
 import { NoRepository } from "@/components/empty/no-repository";
 import { NotLoggedIn } from "@/components/empty/not-logged-in";
 import { IssueCard } from "@/components/issues/issue-card";
@@ -39,12 +42,11 @@ export const AllIssuesPage = () => {
 			});
 		},
 		enabled: !!installationId,
-		initialData: [],
 		refetchOnWindowFocus: true,
 	});
 
 	const issuesData = useQuery({
-		queryKey: ["issues", selectedRepo],
+		queryKey: [`issues-${selectedRepo}`],
 		queryFn: async () => {
 			if (!installationId) {
 				return [];
@@ -55,15 +57,13 @@ export const AllIssuesPage = () => {
 			const issues = await getIssues({
 				data: { installationId, owner, repo },
 			});
-			// console.info("🍉debuu ~ AllIssuesPage ~ issues:", issues);
 			return issues;
 		},
 		enabled: !!selectedRepo,
-		initialData: [],
 	});
 
 	// set selected repo between pages
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <just need to run this on load without deps>
 	useEffect(() => {
 		if (selectedRepoContext) {
 			setRepo(selectedRepoContext);
@@ -78,16 +78,15 @@ export const AllIssuesPage = () => {
 			/>
 
 			{!repositoriesData.isFetched && <div>Loading...</div>}
-
 			{repositoriesData.isFetched && (
 				<div>
 					{!authenticated && <NotLoggedIn />}
 
-					{authenticated && repositoriesData.data.length === 0 && (
+					{authenticated && (repositoriesData.data ?? []).length === 0 && (
 						<NoRepository />
 					)}
 
-					{authenticated && repositoriesData.data.length > 0 && (
+					{authenticated && (repositoriesData.data ?? []).length > 0 && (
 						<>
 							<Combobox
 								items={repositoriesData.data}
@@ -95,7 +94,7 @@ export const AllIssuesPage = () => {
 									setRepo(e as string);
 									setSelectedRepo(e as string);
 								}}
-								defaultValue={selectedRepoContext}
+								value={selectedRepoContext}
 							>
 								<ComboboxInput
 									placeholder="Select a repository"
@@ -104,7 +103,7 @@ export const AllIssuesPage = () => {
 								<ComboboxContent>
 									<ComboboxEmpty>No items found.</ComboboxEmpty>
 									<ComboboxList>
-										{(item: (typeof repositoriesData.data)[number]) => (
+										{(item: GetRepositoriesFnType) => (
 											<ComboboxItem key={item.id} value={item.full_name}>
 												{item.full_name}
 											</ComboboxItem>
@@ -112,12 +111,11 @@ export const AllIssuesPage = () => {
 									</ComboboxList>
 								</ComboboxContent>
 							</Combobox>
-
 							<div className="space-y-3 mt-5">
 								{issuesData.isFetching && <IssueCardSkeleton />}
 
 								{!issuesData.isFetching &&
-									issuesData.data.map((issue, idx) => {
+									(issuesData.data ?? []).map((issue, idx) => {
 										return (
 											<IssueCard
 												key={issue.id}
@@ -130,7 +128,6 @@ export const AllIssuesPage = () => {
 										);
 									})}
 							</div>
-
 							{/* <div className="space-y-3">
 								{filteredIssues.length === 0 ? (
 									<div className="text-center py-12 text-gray-500 dark:text-gray-400">
