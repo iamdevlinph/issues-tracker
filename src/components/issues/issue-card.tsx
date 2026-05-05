@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { Calendar, MessageSquare, Star } from "lucide-react";
 import type { GetIssuesFnType } from "@/actions/get-issues.function";
 import { getRepoFromURL } from "@/lib/get-repo-from-url";
@@ -55,11 +56,13 @@ export const IssueCard = ({ issue, isPinned, options }: IssueCardProps) => {
 						<div className="flex gap-1.5 shrink-0"></div>
 					</div>
 				</div>
-				<button
+				<motion.button
+					whileTap={{ scale: 0.9, rotate: 20 }}
 					onClick={() => (isPinned ? unpinIssue(issue.id) : pinIssue(issue))}
 					className={cn(
-						"p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors shrink-0",
-						"active:animate-ping",
+						"p-1 rounded  transition-colors shrink-0",
+						"-m-2.5 p-2.5",
+						"cursor-pointer",
 					)}
 					aria-label={isPinned ? "Unpin issue" : "Pin issue"}
 					type="button"
@@ -71,7 +74,7 @@ export const IssueCard = ({ issue, isPinned, options }: IssueCardProps) => {
 								: "text-gray-400 dark:text-gray-500"
 						}`}
 					/>
-				</button>
+				</motion.button>
 			</div>
 		</div>
 	);

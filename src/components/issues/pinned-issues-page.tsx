@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from "framer-motion";
 import { NoPinnedIssues } from "@/components/empty/no-pinned-issues";
 import { IssueCard } from "@/components/issues/issue-card";
 import { PageTitle } from "@/components/page-title";
@@ -33,14 +34,37 @@ export const PinnedIssuesPage = () => {
 								</h3>
 
 								<div className="space-y-3">
-									{issues.map((issue) => (
-										<IssueCard
-											key={issue.id}
-											issue={issue}
-											isPinned={pinnedIssues.all.includes(issue.id)}
-											// onTogglePin={togglePin}
-										/>
-									))}
+									<AnimatePresence>
+										{issues.map((issue) => (
+											<motion.div
+												key={issue.id}
+												initial={{
+													opacity: 0,
+													x: 20,
+												}}
+												animate={{
+													opacity: 1,
+													x: 0,
+													transition: {
+														duration: 0.1,
+													},
+												}}
+												exit={{
+													opacity: 0,
+													x: -30,
+												}}
+												transition={{
+													duration: 0.3,
+												}}
+											>
+												<IssueCard
+													key={issue.id}
+													issue={issue}
+													isPinned={pinnedIssues.all.includes(issue.id)}
+												/>
+											</motion.div>
+										))}
+									</AnimatePresence>
 								</div>
 							</div>
 						);
