@@ -6,6 +6,7 @@ import { getRepositoriesFn } from "@/actions/get-repositories.function";
 import { NoRepository } from "@/components/empty/no-repository";
 import { NotLoggedIn } from "@/components/empty/not-logged-in";
 import { IssueCard } from "@/components/issues/issue-card";
+import { IssueCardSkeleton } from "@/components/issues/issue-card-skeleton";
 import { PageTitle } from "@/components/page-title";
 import {
 	Combobox,
@@ -49,7 +50,6 @@ export const AllIssuesPage = () => {
 			}
 
 			const [owner, repo] = selectedRepo.split("/");
-			console.info("🍉debuu ~ AllIssuesPage ~ [owner, repo]:", [owner, repo]);
 
 			const issues = await getIssues({
 				data: { installationId, owner, repo },
@@ -103,18 +103,21 @@ export const AllIssuesPage = () => {
 							</Combobox>
 
 							<div className="space-y-3 mt-5">
-								{issuesData.data.map((issue, idx) => {
-									return (
-										<IssueCard
-											key={issue.id}
-											issue={issue}
-											// isPinned={pinnedIds.includes(issue.id)}
-											isPinned={idx % 2 === 0}
-											options={{ showRepository: true }}
-											onTogglePin={() => {}}
-										/>
-									);
-								})}
+								{issuesData.isFetching && <IssueCardSkeleton />}
+
+								{!issuesData.isFetching &&
+									issuesData.data.map((issue, idx) => {
+										return (
+											<IssueCard
+												key={issue.id}
+												issue={issue}
+												// isPinned={pinnedIds.includes(issue.id)}
+												isPinned={idx % 2 === 0}
+												options={{ showRepository: true }}
+												onTogglePin={() => {}}
+											/>
+										);
+									})}
 							</div>
 
 							{/* <div className="space-y-3">
