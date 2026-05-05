@@ -1,8 +1,10 @@
+import { AlertCircleIcon } from "lucide-react";
 import { useEffect } from "react";
 import { GithubLogin } from "@/components/account/login-github";
 import { LogoutButton } from "@/components/account/logout-button";
 import { ManageGithubAccess } from "@/components/account/manage-github-access";
 import { PageTitle } from "@/components/page-title";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useAuthStore } from "@/stores/auth-store";
 
 export const AccountPage = () => {
@@ -42,6 +44,15 @@ export const AccountPage = () => {
 						<ManageGithubAccess />
 
 						<LogoutButton />
+
+						<Alert variant="destructive" className="max-w-md">
+							<AlertCircleIcon />
+							<AlertTitle>Logout</AlertTitle>
+							<AlertDescription>
+								Logging out will also clear pinned issues. You will need to pin
+								them again.
+							</AlertDescription>
+						</Alert>
 					</>
 				)}
 			</div>
