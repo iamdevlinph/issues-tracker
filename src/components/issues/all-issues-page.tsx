@@ -1,6 +1,6 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getIssuesFn } from "@/actions/get-issues.function";
 import { getRepositoriesFn } from "@/actions/get-repositories.function";
 import { NoRepository } from "@/components/empty/no-repository";
@@ -16,15 +16,16 @@ import {
 	ComboboxItem,
 	ComboboxList,
 } from "@/components/ui/combobox";
+import { useApp } from "@/context/use-app";
 import { useAuthStore } from "@/stores/auth-store";
 
 export const AllIssuesPage = () => {
-	const queryClient = useQueryClient();
 	const installationId = useAuthStore((s) => s.installationId);
 	const authenticated = useAuthStore((s) => s.authenticated);
 	const getRepos = useServerFn(getRepositoriesFn);
 	const getIssues = useServerFn(getIssuesFn);
 	const [selectedRepo, setRepo] = useState("");
+	const { selectedRepo: selectedRepoContext, setSelectedRepo } = useApp();
 
 	const repositoriesData = useQuery({
 		queryKey: ["repositories"],
@@ -54,12 +55,20 @@ export const AllIssuesPage = () => {
 			const issues = await getIssues({
 				data: { installationId, owner, repo },
 			});
-			console.info("🍉debuu ~ AllIssuesPage ~ issues:", issues);
+			// console.info("🍉debuu ~ AllIssuesPage ~ issues:", issues);
 			return issues;
 		},
 		enabled: !!selectedRepo,
 		initialData: [],
 	});
+
+	// set selected repo between pages
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		if (selectedRepoContext) {
+			setRepo(selectedRepoContext);
+		}
+	}, []);
 
 	return (
 		<>
@@ -84,7 +93,9 @@ export const AllIssuesPage = () => {
 								items={repositoriesData.data}
 								onValueChange={(e) => {
 									setRepo(e as string);
+									setSelectedRepo(e as string);
 								}}
+								defaultValue={selectedRepoContext}
 							>
 								<ComboboxInput
 									placeholder="Select a repository"

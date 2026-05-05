@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { ThemeProvider } from "@/components/themes/theme-provider";
+import { AppProvider } from "@/context/app-provider";
 import Header from "../components/header";
 import appCss from "../styles.css?url";
 
@@ -40,13 +41,15 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			</head>
 			<body className="font-sans antialiased wrap-anywhere selection:bg-[rgba(79,184,178,0.24)] min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors">
 				<ThemeProvider defaultTheme="system" storageKey="theme">
-					<QueryClientProvider client={queryClient}>
-						<Header />
+					<AppProvider>
+						<QueryClientProvider client={queryClient}>
+							<Header />
 
-						<main className="max-w-5xl lg:mx-auto mt-20 mx-6 pb-20">
-							{children}
-						</main>
-					</QueryClientProvider>
+							<main className="max-w-5xl lg:mx-auto mt-20 mx-6 pb-20">
+								{children}
+							</main>
+						</QueryClientProvider>
+					</AppProvider>
 				</ThemeProvider>
 				<TanStackDevtools
 					config={{
