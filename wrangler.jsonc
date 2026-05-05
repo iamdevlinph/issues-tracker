@@ -6,7 +6,7 @@
   "main": "@tanstack/react-start/server-entry",
   "routes": [
     {
-      "pattern": "https://issues-tracker.devlin.ph",
+      "pattern": "issues-tracker.devlin.ph",
       "custom_domain": true
     }
   ],
