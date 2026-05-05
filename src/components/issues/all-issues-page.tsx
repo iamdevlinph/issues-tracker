@@ -25,6 +25,7 @@ import { useAuthStore } from "@/stores/auth-store";
 export const AllIssuesPage = () => {
 	const installationId = useAuthStore((s) => s.installationId);
 	const authenticated = useAuthStore((s) => s.authenticated);
+	const pinnedIssues = useAuthStore((s) => s.pinnedIssues);
 	const getRepos = useServerFn(getRepositoriesFn);
 	const getIssues = useServerFn(getIssuesFn);
 	const [selectedRepo, setRepo] = useState("");
@@ -77,8 +78,9 @@ export const AllIssuesPage = () => {
 				description="Browse and manage issues across all repositories"
 			/>
 
-			{!repositoriesData.isFetched && <div>Loading...</div>}
-			{repositoriesData.isFetched && (
+			{repositoriesData.isFetching && <div>Loading...</div>}
+
+			{!repositoriesData.isFetching && (
 				<div>
 					{!authenticated && <NotLoggedIn />}
 
@@ -115,36 +117,17 @@ export const AllIssuesPage = () => {
 								{issuesData.isFetching && <IssueCardSkeleton />}
 
 								{!issuesData.isFetching &&
-									(issuesData.data ?? []).map((issue, idx) => {
+									(issuesData.data ?? []).map((issue) => {
 										return (
 											<IssueCard
 												key={issue.id}
 												issue={issue}
-												// isPinned={pinnedIds.includes(issue.id)}
-												isPinned={idx % 2 === 0}
-												options={{ showRepository: true }}
-												onTogglePin={() => {}}
+												isPinned={(pinnedIssues.all ?? []).includes(issue.id)}
+												options={{ showRepository: false }}
 											/>
 										);
 									})}
 							</div>
-							{/* <div className="space-y-3">
-								{filteredIssues.length === 0 ? (
-									<div className="text-center py-12 text-gray-500 dark:text-gray-400">
-										No issues found
-									</div>
-								) : (
-									filteredIssues.map((issue) => (
-										<IssueCard
-											key={issue.id}
-											issue={issue}
-											isPinned={pinnedIds.includes(issue.id)}
-											onTogglePin={togglePin}
-											options={{ showRepository: true }}
-										/>
-									))
-								)}
-							</div> */}
 						</>
 					)}
 				</div>

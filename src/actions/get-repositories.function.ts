@@ -12,11 +12,37 @@ import { installationOctokit } from "./github-app.server";
 export const getRepositoriesFn = createServerFn()
 	.inputValidator((data: { installationId: number }) => data)
 	.handler(async ({ data }) => {
+		let repositories = [];
+
 		const octokit = await installationOctokit(data.installationId);
 
-		const repos = await octokit.rest.apps.listReposAccessibleToInstallation();
+		const repos = await octokit.rest.apps.listReposAccessibleToInstallation({
+			per_page: 100,
+		});
 
-		return repos.data.repositories;
+		repositories = [...repos.data.repositories];
+
+		const totalCount = repos.data.total_count;
+
+		let page = 1;
+		let hasNextPage = true;
+
+		// TODO: Add pagination in UI in the future or when I remember lol
+		if (totalCount > 100) {
+			while (hasNextPage) {
+				const repos = await octokit.rest.apps.listReposAccessibleToInstallation(
+					{
+						per_page: 100,
+						page,
+					},
+				);
+
+				repositories.push(...repos.data.repositories);
+				hasNextPage = repos.data.repositories.length === 100;
+				page++;
+			}
+		}
+		return repositories;
 	});
 
 export type GetRepositoriesFnType = Awaited<

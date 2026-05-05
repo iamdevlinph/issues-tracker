@@ -13,19 +13,19 @@ type EmptySectionProps = {
 	title: string;
 	description: string;
 	children: React.ReactNode;
+	icon?: React.ReactNode;
 };
 
 export function EmptySection({
 	title,
 	description,
 	children,
+	icon,
 }: EmptySectionProps) {
 	return (
 		<Empty>
 			<EmptyHeader>
-				<EmptyMedia variant="icon">
-					<Folder />
-				</EmptyMedia>
+				<EmptyMedia variant="icon">{icon ?? <Folder />}</EmptyMedia>
 				<EmptyTitle>{title}</EmptyTitle>
 				<EmptyDescription>{description}</EmptyDescription>
 			</EmptyHeader>

@@ -1,27 +1,12 @@
-import { Star } from "lucide-react";
-import { useState } from "react";
 import { NoPinnedIssues } from "@/components/empty/no-pinned-issues";
-import type { Issue } from "@/components/issues/types";
+import { IssueCard } from "@/components/issues/issue-card";
 import { PageTitle } from "@/components/page-title";
-import { mockPinnedIssues } from "@/lib/dummy-data";
+import { useAuthStore } from "@/stores/auth-store";
 
 export const PinnedIssuesPage = () => {
-	const [pinnedIssues, setPinnedIssues] = useState<Issue[]>(mockPinnedIssues);
-
-	const togglePin = (id: number) => {
-		setPinnedIssues((prev) => prev.filter((issue) => issue.id !== id));
-	};
-
-	const groupedByRepo = pinnedIssues.reduce(
-		(acc, issue) => {
-			if (!acc[issue.repository]) {
-				acc[issue.repository] = [];
-			}
-			acc[issue.repository].push(issue);
-			return acc;
-		},
-		{} as Record<string, Issue[]>,
-	);
+	const pinnedRepos = useAuthStore((s) => s.pinnedRepos);
+	const pinnedIssues = useAuthStore((s) => s.pinnedIssues);
+	const hasPinnedIssues = (pinnedIssues.all ?? []).length > 0;
 
 	return (
 		<>
@@ -30,34 +15,36 @@ export const PinnedIssuesPage = () => {
 				description="Your starred issues organized by repository"
 			/>
 
-			<NoPinnedIssues />
-
-			{Object.keys(groupedByRepo).length === 0 ? (
-				<div className="text-center py-12">
-					<Star className="w-12 h-12 mx-auto mb-4 text-gray-300 dark:text-gray-700" />
-					<p className="text-gray-500 dark:text-gray-400">
-						No pinned issues yet. Visit the All Issues page to star some issues.
-					</p>
-				</div>
+			{!hasPinnedIssues ? (
+				<NoPinnedIssues />
 			) : (
 				<div className="space-y-8">
-					{Object.entries(groupedByRepo).map(([repo, issues]) => (
-						<div key={repo}>
-							<h3 className="font-semibold mb-4 text-sm text-gray-600 dark:text-gray-400 font-mono">
-								{repo}
-							</h3>
-							<div className="space-y-3">
-								{/* {issues.map((issue) => (
-									<IssueCard
-										key={issue.id}
-										issue={issue}
-										isPinned={true}
-										onTogglePin={togglePin}
-									/>
-								))} */}
+					{pinnedRepos.all.map((repoName) => {
+						const repo = pinnedRepos.byName[repoName];
+
+						const issues = repo.issueIds
+							.map((id) => pinnedIssues.byId[id])
+							.filter(Boolean);
+
+						return (
+							<div key={repoName}>
+								<h3 className="font-semibold mb-4 text-sm text-gray-600 dark:text-gray-400 font-mono">
+									{repoName}
+								</h3>
+
+								<div className="space-y-3">
+									{issues.map((issue) => (
+										<IssueCard
+											key={issue.id}
+											issue={issue}
+											isPinned={pinnedIssues.all.includes(issue.id)}
+											// onTogglePin={togglePin}
+										/>
+									))}
+								</div>
 							</div>
-						</div>
-					))}
+						);
+					})}
 				</div>
 			)}
 		</>

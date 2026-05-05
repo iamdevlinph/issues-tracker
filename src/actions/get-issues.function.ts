@@ -35,3 +35,5 @@ export const getIssuesFn = createServerFn()
 
 		return issues.data;
 	});
+
+export type GetIssuesFnType = Awaited<ReturnType<typeof getIssuesFn>>[number];

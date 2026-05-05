@@ -49,7 +49,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 			</head>
 			<body className="font-sans antialiased wrap-anywhere selection:bg-[rgba(79,184,178,0.24)] min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors">
-				<ThemeProvider defaultTheme="system" storageKey="theme">
+				<ThemeProvider defaultTheme="dark" storageKey="theme">
 					<AppProvider>
 						<QueryClientProvider client={queryClient}>
 							<Header />

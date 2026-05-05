@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 export const NotLoggedIn = () => {
 	return (
 		<EmptySection
-			title="No Issues"
+			title="No Account"
 			description="You are currently not logged in."
 		>
 			<Link to="/account">
