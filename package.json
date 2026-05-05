@@ -1,5 +1,5 @@
 {
-  "name": "ghit",
+  "name": "issues-tracker-app",
   "private": true,
   "type": "module",
   "imports": {
@@ -15,6 +15,7 @@
     "check": "biome check",
     "fix": "biome check --fix",
     "deploy": "npm run build && wrangler deploy",
+    "cf-typegen": "wrangler types",
     "prepare": "husky"
   },
   "dependencies": {

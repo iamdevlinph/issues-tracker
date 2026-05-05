@@ -1,5 +1,5 @@
 {
-  "projectName": "ghit",
+  "projectName": "issues-tracker-app",
   "mode": "file-router",
   "typescript": true,
   "packageManager": "npm",
