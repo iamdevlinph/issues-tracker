@@ -51,6 +51,8 @@ export const AddIssueURL = () => {
 
 				setOpen(false);
 				setIssueUrl("");
+
+				return data;
 			} catch (e) {
 				const msg = (e as Error).message;
 				setError(msg);

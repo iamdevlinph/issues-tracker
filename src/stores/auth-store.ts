@@ -67,10 +67,17 @@ export const useAuthStore = create<AuthState>()(
 					const repoName = getRepoFromURL(issue.repository_url);
 					const repo = state.pinnedRepos.byName[repoName];
 					const repoExists = !!repo;
+					const issueExists = !!state.pinnedIssues.byId[issue.id];
+
+					const issueAlreadyInRepo = repoExists
+						? repo.issueIds.includes(issue.id)
+						: false;
 
 					return {
 						pinnedIssues: {
-							all: [...state.pinnedIssues.all, issue.id],
+							all: issueExists
+								? state.pinnedIssues.all
+								: [...state.pinnedIssues.all, issue.id],
 							byId: {
 								...state.pinnedIssues.byId,
 								[issue.id]: issue,
@@ -85,7 +92,9 @@ export const useAuthStore = create<AuthState>()(
 								[repoName]: {
 									name: repoName,
 									issueIds: repoExists
-										? [...repo.issueIds, issue.id]
+										? issueAlreadyInRepo
+											? repo.issueIds
+											: [...repo.issueIds, issue.id]
 										: [issue.id],
 								},
 							},
