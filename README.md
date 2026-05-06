@@ -10,6 +10,17 @@ Welcome to your new TanStack Start app!
 openssl pkey -in input.private-key.pem -out output.pkcs8.pem
 ```
 
+## Stack
+
+- TanStack Start
+- TanStack Query
+- TailwindCSS
+- shadcn/ui
+- Framer Motion for minor animations
+- Zustand for client state management
+- Octokit for Github REST APIs
+- Biome for linting and formatting
+
 To run this application:
 
 ```bash
