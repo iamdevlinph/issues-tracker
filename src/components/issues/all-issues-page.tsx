@@ -27,7 +27,6 @@ import { useAuthStore } from "@/stores/auth-store";
 export const AllIssuesPage = () => {
 	const installationId = useAuthStore((s) => s.installationId);
 	const authenticated = useAuthStore((s) => s.authenticated);
-	const pinnedIssues = useAuthStore((s) => s.pinnedIssues);
 	const getRepos = useServerFn(getRepositoriesFn);
 	const getIssues = useServerFn(getIssuesFn);
 	const [selectedRepo, setRepo] = useState("");
