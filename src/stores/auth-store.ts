@@ -69,6 +69,8 @@ export const useAuthStore = create<AuthState>()(
 					const repoExists = !!repo;
 					const issueExists = !!state.pinnedIssues.byId[issue.id];
 
+					// already checked in the add-issue-url
+					// maybe just remove
 					const issueAlreadyInRepo = repoExists
 						? repo.issueIds.includes(issue.id)
 						: false;

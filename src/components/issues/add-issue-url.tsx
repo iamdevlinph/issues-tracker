@@ -19,6 +19,7 @@ import { useAuthStore } from "@/stores/auth-store";
 export const AddIssueURL = () => {
 	const installationId = useAuthStore((s) => s.installationId);
 	const pinIssue = useAuthStore((s) => s.pinIssue);
+	const pinnedIssues = useAuthStore((s) => s.pinnedIssues);
 	const getSingleIssue = useServerFn(getSingleIssueFn);
 	const [issueUrl, setIssueUrl] = useState("");
 	const [error, setError] = useState("");
@@ -46,6 +47,10 @@ export const AddIssueURL = () => {
 						issue_number,
 					},
 				});
+
+				if (pinnedIssues.all.includes(data.id)) {
+					throw new Error("Issue already exists");
+				}
 
 				pinIssue(data);
 
@@ -107,7 +112,7 @@ export const AddIssueURL = () => {
 							}}
 							disabled={singleIssue.isFetching}
 						/>
-						{error && <p className="text-sm text-red-500 mt-2">{error}</p>}
+						{error && <p className="text-xs text-red-500 mt-2">{error}</p>}
 					</div>
 					<div className="flex justify-end gap-2">
 						<button
