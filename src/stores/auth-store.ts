@@ -4,18 +4,6 @@ import type { GetIssuesFnType } from "@/actions/get-issues.functions";
 import type { GetRepositoriesFnType } from "@/actions/get-repositories.functions";
 import { getRepoFromURL } from "@/lib/get-repo-from-url";
 
-export type Repo = {
-	id: number;
-	full_name: string;
-};
-
-export type PinnedIssue = {
-	id: number;
-	title: string;
-	repo: string;
-	url: string;
-};
-
 type AuthState = {
 	authenticated: boolean;
 	githubLogin: string | null;
