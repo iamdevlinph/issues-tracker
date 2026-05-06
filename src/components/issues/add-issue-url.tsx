@@ -82,13 +82,10 @@ export const AddIssueURL = () => {
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<button
-					type="button"
-					className="flex items-center gap-2 px-4 py-2 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors text-sm font-medium"
-				>
+				<Button type="button">
 					<Plus className="w-4 h-4" />
 					Add Issue
-				</button>
+				</Button>
 			</DialogTrigger>
 			<DialogContent
 				className="[&>button]:hidden"
@@ -121,16 +118,16 @@ export const AddIssueURL = () => {
 						{error && <p className="text-xs text-red-500 mt-2">{error}</p>}
 					</div>
 					<div className="flex justify-end gap-2">
-						<button
+						<Button
 							onClick={() => {
 								handleClose();
 							}}
-							className="px-4 py-2 border border-gray-200 dark:border-gray-800 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors text-sm"
 							type="button"
 							disabled={singleIssue.isFetching}
+							variant="secondary"
 						>
 							Cancel
-						</button>
+						</Button>
 						<Button
 							onClick={handleAddIssue}
 							type="submit"
