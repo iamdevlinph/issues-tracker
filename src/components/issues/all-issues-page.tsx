@@ -102,7 +102,7 @@ export const AllIssuesPage = () => {
 							>
 								<ComboboxInput
 									placeholder="Select a repository"
-									className="w-max"
+									className="w-full md:w-md"
 								/>
 								<ComboboxContent>
 									<ComboboxEmpty>No items found.</ComboboxEmpty>
