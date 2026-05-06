@@ -25,9 +25,15 @@ export const PinnedIssuesSearch = ({
 			<InputGroupAddon>
 				<SearchIcon />
 			</InputGroupAddon>
-			<InputGroupAddon align="inline-end">
-				<X />
-			</InputGroupAddon>
+			{search.length > 0 && (
+				<InputGroupAddon
+					align="inline-end"
+					onClick={() => setSearch("")}
+					className="cursor-pointer"
+				>
+					<X />
+				</InputGroupAddon>
+			)}
 		</InputGroup>
 	);
 };
