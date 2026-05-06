@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Calendar, MessageSquare, Star } from "lucide-react";
 import type { GetIssuesFnType } from "@/actions/get-issues.functions";
+import { IssueLabel } from "@/components/issues/issue-label";
 import { getRepoFromURL } from "@/lib/get-repo-from-url";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/stores/auth-store";
@@ -14,6 +15,7 @@ type IssueCardProps = {
 };
 
 export const IssueCard = ({ issue, isPinned, options }: IssueCardProps) => {
+	console.log("🍉debuu ~ IssueCard ~ issue:", issue);
 	const { showRepository = false } = options || {};
 	const pinIssue = useAuthStore((s) => s.pinIssue);
 	const unpinIssue = useAuthStore((s) => s.unpinIssue);
@@ -60,15 +62,11 @@ export const IssueCard = ({ issue, isPinned, options }: IssueCardProps) => {
 									string
 								>;
 								return (
-									<span
+									<IssueLabel
 										key={id}
-										className={cn(
-											"px-2 py-0.5 bg-mist-700 dark:bg-gray-800 text-xs rounded-full whitespace-nowrap",
-											`text-[#${color}]`,
-										)}
-									>
-										{name}
-									</span>
+										label={name as string}
+										color={color as string}
+									/>
 								);
 							})}
 						</div>
@@ -81,6 +79,7 @@ export const IssueCard = ({ issue, isPinned, options }: IssueCardProps) => {
 						"p-1 rounded  transition-colors shrink-0",
 						"-m-2.5 p-2.5",
 						"cursor-pointer",
+						"self-center",
 					)}
 					aria-label={isPinned ? "Unpin issue" : "Pin issue"}
 					type="button"
