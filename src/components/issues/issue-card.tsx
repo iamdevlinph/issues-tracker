@@ -1,12 +1,9 @@
 import { useLocation } from "@tanstack/react-router";
-import { useServerFn } from "@tanstack/react-start";
 import { motion } from "framer-motion";
-import { Calendar, MessageCircleOff, MessageSquare, Star } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
+import { Calendar, MessageSquare, Star } from "lucide-react";
 import type { GetIssuesFnType } from "@/actions/get-issues.functions";
-import { updateIssueFn } from "@/actions/update-issue.functions";
 import { IssueLabel } from "@/components/issues/issue-label";
+import { PinnedIssueMenu } from "@/components/issues/pinned-issue-menu";
 import { Card, CardContent } from "@/components/ui/card";
 import { getRepoFromURL } from "@/lib/get-repo-from-url";
 import { cn } from "@/lib/utils";
@@ -14,20 +11,19 @@ import { useAuthStore } from "@/stores/auth-store";
 
 type IssueCardProps = {
 	issue: GetIssuesFnType;
-	isPinned: boolean;
 	options?: {
 		showRepository?: boolean;
 	};
 };
 
-export const IssueCard = ({ issue, isPinned, options }: IssueCardProps) => {
+export const IssueCard = ({ issue, options }: IssueCardProps) => {
 	const location = useLocation();
 	const { showRepository = false } = options || {};
 	const pinIssue = useAuthStore((s) => s.pinIssue);
 	const unpinIssue = useAuthStore((s) => s.unpinIssue);
-	const installationId = useAuthStore((s) => s.installationId);
-	const updateIssue = useServerFn(updateIssueFn);
-	const [issueCloseInProgress, setIssueClose] = useState(false);
+	const pinnedIssues = useAuthStore((s) => s.pinnedIssues);
+
+	const isPinned = pinnedIssues.all.includes(issue.id);
 
 	const date = new Date(issue.created_at);
 	const formattedCreatedAt = date.toLocaleDateString("en-US", {
@@ -35,7 +31,7 @@ export const IssueCard = ({ issue, isPinned, options }: IssueCardProps) => {
 		day: "2-digit",
 		year: "numeric",
 	});
-	const { fullRepoName, owner, repo } = getRepoFromURL(issue.repository_url);
+	const { fullRepoName } = getRepoFromURL(issue.repository_url);
 
 	return (
 		<Card className="p-2 py-3">
@@ -83,7 +79,7 @@ export const IssueCard = ({ issue, isPinned, options }: IssueCardProps) => {
 							</div>
 						</div>
 					</div>
-					<div className="flex flex-col gap-4">
+					<div className="flex flex-col gap-3 items-center">
 						<motion.button
 							whileTap={{ scale: 0.9, rotate: 20 }}
 							onClick={() =>
@@ -107,45 +103,7 @@ export const IssueCard = ({ issue, isPinned, options }: IssueCardProps) => {
 						</motion.button>
 
 						{isPinned && location.pathname === "/" && (
-							<motion.button
-								whileTap={{ scale: 0.9, rotate: 20 }}
-								onClick={async () => {
-									setIssueClose(true);
-									try {
-										if (!installationId) {
-											throw new Error("installationId is missing");
-										}
-
-										await updateIssue({
-											data: {
-												owner,
-												repo,
-												issue_number: issue.number,
-												state: "closed",
-												installationId,
-											},
-										});
-
-										unpinIssue(issue.id);
-									} catch (e) {
-										toast.error("Unable to close issue", {
-											description: (e as Error).message,
-										});
-									} finally {
-										setIssueClose(false);
-									}
-								}}
-								className={cn(
-									"p-1 rounded  transition-colors shrink-0",
-									"-m-2.5 p-2.5",
-									"cursor-pointer",
-								)}
-								aria-label={isPinned ? "Unpin issue" : "Pin issue"}
-								type="button"
-								disabled={issueCloseInProgress}
-							>
-								<MessageCircleOff className={cn("w-4 h-4")} />
-							</motion.button>
+							<PinnedIssueMenu issue={issue} />
 						)}
 					</div>
 				</div>

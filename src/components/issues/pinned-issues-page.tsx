@@ -63,11 +63,7 @@ export const PinnedIssuesPage = () => {
 													duration: 0.3,
 												}}
 											>
-												<IssueCard
-													key={issue.id}
-													issue={issue}
-													isPinned={pinnedIssues.all.includes(issue.id)}
-												/>
+												<IssueCard key={issue.id} issue={issue} />
 											</motion.div>
 										))}
 									</AnimatePresence>
