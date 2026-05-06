@@ -1,6 +1,9 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { TanStackDevtools } from "@tanstack/react-devtools";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { ThemeProvider } from "@/components/themes/theme-provider";
@@ -43,6 +46,10 @@ export const Route = createRootRoute({
 	shellComponent: RootDocument,
 });
 
+const asyncStoragePersister = createAsyncStoragePersister({
+	storage: AsyncStorage,
+});
+
 function RootDocument({ children }: { children: React.ReactNode }) {
 	return (
 		<html lang="en" suppressHydrationWarning>
@@ -52,7 +59,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			<body className="font-sans antialiased wrap-anywhere selection:bg-[rgba(79,184,178,0.24)] min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors">
 				<ThemeProvider defaultTheme="dark" storageKey="theme">
 					<AppProvider>
-						<QueryClientProvider client={queryClient}>
+						<PersistQueryClientProvider
+							client={queryClient}
+							persistOptions={{ persister: asyncStoragePersister }}
+						>
 							<Header />
 
 							<main className="max-w-5xl lg:mx-auto mt-20 mx-6 pb-20">
@@ -76,7 +86,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 									},
 								]}
 							/>
-						</QueryClientProvider>
+						</PersistQueryClientProvider>
 					</AppProvider>
 				</ThemeProvider>
 
