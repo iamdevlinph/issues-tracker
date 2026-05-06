@@ -1,6 +1,10 @@
+import { useServerFn } from "@tanstack/react-start";
 import { motion } from "framer-motion";
-import { Calendar, MessageSquare, Star } from "lucide-react";
+import { Calendar, MessageCircleOff, MessageSquare, Star } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 import type { GetIssuesFnType } from "@/actions/get-issues.functions";
+import { updateIssueFn } from "@/actions/update-issue.functions";
 import { IssueLabel } from "@/components/issues/issue-label";
 import { getRepoFromURL } from "@/lib/get-repo-from-url";
 import { cn } from "@/lib/utils";
@@ -15,10 +19,12 @@ type IssueCardProps = {
 };
 
 export const IssueCard = ({ issue, isPinned, options }: IssueCardProps) => {
-	console.log("🍉debuu ~ IssueCard ~ issue:", issue);
 	const { showRepository = false } = options || {};
 	const pinIssue = useAuthStore((s) => s.pinIssue);
 	const unpinIssue = useAuthStore((s) => s.unpinIssue);
+	const installationId = useAuthStore((s) => s.installationId);
+	const updateIssue = useServerFn(updateIssueFn);
+	const [issueCloseInProgress, setIssueClose] = useState(false);
 
 	const date = new Date(issue.created_at);
 	const formattedCreatedAt = date.toLocaleDateString("en-US", {
@@ -26,6 +32,7 @@ export const IssueCard = ({ issue, isPinned, options }: IssueCardProps) => {
 		day: "2-digit",
 		year: "numeric",
 	});
+	const { fullRepoName, owner, repo } = getRepoFromURL(issue.repository_url);
 
 	return (
 		<div className="p-3 border border-gray-200 dark:border-gray-800 rounded-lg hover:border-gray-300 dark:hover:border-gray-700 transition-colors">
@@ -34,7 +41,7 @@ export const IssueCard = ({ issue, isPinned, options }: IssueCardProps) => {
 					<div className="flex items-center gap-2 mb-1.5">
 						{showRepository && (
 							<span className="text-xs text-gray-500 dark:text-gray-400 font-mono">
-								{getRepoFromURL(issue.repository_url)}
+								{fullRepoName}
 							</span>
 						)}
 						<span className="text-xs text-gray-400 dark:text-gray-500">
@@ -72,26 +79,69 @@ export const IssueCard = ({ issue, isPinned, options }: IssueCardProps) => {
 						</div>
 					</div>
 				</div>
-				<motion.button
-					whileTap={{ scale: 0.9, rotate: 20 }}
-					onClick={() => (isPinned ? unpinIssue(issue.id) : pinIssue(issue))}
-					className={cn(
-						"p-1 rounded  transition-colors shrink-0",
-						"-m-2.5 p-2.5",
-						"cursor-pointer",
-						"self-center",
+				<div className="flex flex-col gap-4">
+					<motion.button
+						whileTap={{ scale: 0.9, rotate: 20 }}
+						onClick={() => (isPinned ? unpinIssue(issue.id) : pinIssue(issue))}
+						className={cn(
+							"p-1 rounded  transition-colors shrink-0",
+							"-m-2.5 p-2.5",
+							"cursor-pointer",
+						)}
+						aria-label={isPinned ? "Unpin issue" : "Pin issue"}
+						type="button"
+					>
+						<Star
+							className={`w-4 h-4 ${
+								isPinned
+									? "fill-yellow-400 text-yellow-400"
+									: "text-gray-400 dark:text-gray-500"
+							}`}
+						/>
+					</motion.button>
+
+					{isPinned && (
+						<motion.button
+							whileTap={{ scale: 0.9, rotate: 20 }}
+							onClick={async () => {
+								setIssueClose(true);
+								try {
+									if (!installationId) {
+										throw new Error("installationId is missing");
+									}
+
+									await updateIssue({
+										data: {
+											owner,
+											repo,
+											issue_number: issue.number,
+											state: "closed",
+											installationId,
+										},
+									});
+
+									unpinIssue(issue.id);
+								} catch (e) {
+									toast.error("Unable to close issue", {
+										description: (e as Error).message,
+									});
+								} finally {
+									setIssueClose(false);
+								}
+							}}
+							className={cn(
+								"p-1 rounded  transition-colors shrink-0",
+								"-m-2.5 p-2.5",
+								"cursor-pointer",
+							)}
+							aria-label={isPinned ? "Unpin issue" : "Pin issue"}
+							type="button"
+							disabled={issueCloseInProgress}
+						>
+							<MessageCircleOff className={cn("w-4 h-4")} />
+						</motion.button>
 					)}
-					aria-label={isPinned ? "Unpin issue" : "Pin issue"}
-					type="button"
-				>
-					<Star
-						className={`w-4 h-4 ${
-							isPinned
-								? "fill-yellow-400 text-yellow-400"
-								: "text-gray-400 dark:text-gray-500"
-						}`}
-					/>
-				</motion.button>
+				</div>
 			</div>
 		</div>
 	);

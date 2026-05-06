@@ -64,8 +64,8 @@ export const useAuthStore = create<AuthState>()(
 
 			pinIssue: (issue) =>
 				set((state) => {
-					const repoName = getRepoFromURL(issue.repository_url);
-					const repo = state.pinnedRepos.byName[repoName];
+					const { fullRepoName } = getRepoFromURL(issue.repository_url);
+					const repo = state.pinnedRepos.byName[fullRepoName];
 					const repoExists = !!repo;
 					const issueExists = !!state.pinnedIssues.byId[issue.id];
 
@@ -88,11 +88,11 @@ export const useAuthStore = create<AuthState>()(
 						pinnedRepos: {
 							all: repoExists
 								? state.pinnedRepos.all
-								: [...state.pinnedRepos.all, repoName],
+								: [...state.pinnedRepos.all, fullRepoName],
 							byName: {
 								...state.pinnedRepos.byName,
-								[repoName]: {
-									name: repoName,
+								[fullRepoName]: {
+									name: fullRepoName,
 									issueIds: repoExists
 										? issueAlreadyInRepo
 											? repo.issueIds
@@ -112,8 +112,8 @@ export const useAuthStore = create<AuthState>()(
 						return state;
 					}
 
-					const repoName = getRepoFromURL(issue.repository_url);
-					const repo = state.pinnedRepos.byName[repoName];
+					const { fullRepoName } = getRepoFromURL(issue.repository_url);
+					const repo = state.pinnedRepos.byName[fullRepoName];
 					const nextIssueIds = repo.issueIds.filter((id) => id !== issueId);
 
 					const nextRepos = {
@@ -121,15 +121,15 @@ export const useAuthStore = create<AuthState>()(
 					};
 
 					const nextRepoAll = state.pinnedRepos.all.filter(
-						(name) => name !== repoName,
+						(name) => name !== fullRepoName,
 					);
 
 					// remove empty repo
 					if (nextIssueIds.length === 0) {
-						delete nextRepos[repoName];
+						delete nextRepos[fullRepoName];
 					} else {
-						nextRepos[repoName] = {
-							name: repoName,
+						nextRepos[fullRepoName] = {
+							name: fullRepoName,
 
 							issueIds: nextIssueIds,
 						};
