@@ -125,7 +125,6 @@ export const AllIssuesPage = () => {
 											<IssueCard
 												key={issue.id}
 												issue={issue}
-												isPinned={(pinnedIssues.all ?? []).includes(issue.id)}
 												options={{ showRepository: false }}
 											/>
 										);
