@@ -1,3 +1,4 @@
+import { useLocation } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { motion } from "framer-motion";
 import { Calendar, MessageCircleOff, MessageSquare, Star } from "lucide-react";
@@ -19,6 +20,7 @@ type IssueCardProps = {
 };
 
 export const IssueCard = ({ issue, isPinned, options }: IssueCardProps) => {
+	const location = useLocation();
 	const { showRepository = false } = options || {};
 	const pinIssue = useAuthStore((s) => s.pinIssue);
 	const unpinIssue = useAuthStore((s) => s.unpinIssue);
@@ -100,7 +102,7 @@ export const IssueCard = ({ issue, isPinned, options }: IssueCardProps) => {
 						/>
 					</motion.button>
 
-					{isPinned && (
+					{isPinned && location.pathname === "/" && (
 						<motion.button
 							whileTap={{ scale: 0.9, rotate: 20 }}
 							onClick={async () => {
