@@ -4,6 +4,7 @@ import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
 import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { ThemeProvider } from "@/components/themes/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 import { GC_TIME, STALE_TIME } from "@/constants";
 import { AppProvider } from "@/context/app-provider";
 import Header from "../components/header";
@@ -57,6 +58,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 							<main className="max-w-5xl lg:mx-auto mt-20 mx-6 pb-20">
 								{children}
 							</main>
+
+							<Toaster />
 
 							<TanStackDevtools
 								config={{

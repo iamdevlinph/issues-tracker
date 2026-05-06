@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { installationOctokit } from "./github-app.server";
 
-const GetIssuesSchema = z.object({
+export const GetIssuesSchema = z.object({
 	installationId: z.number(),
 	owner: z.string(),
 	repo: z.string(),

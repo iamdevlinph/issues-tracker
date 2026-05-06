@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { NoPinnedIssues } from "@/components/empty/no-pinned-issues";
 import { NotLoggedIn } from "@/components/empty/not-logged-in";
+import { AddIssueURL } from "@/components/issues/add-issue-url";
 import { IssueCard } from "@/components/issues/issue-card";
 import { PageTitle } from "@/components/page-title";
 import { useAuthStore } from "@/stores/auth-store";
@@ -16,6 +17,7 @@ export const PinnedIssuesPage = () => {
 			<PageTitle
 				title="Pinned Issues"
 				description="Your starred issues organized by repository"
+				aside={<AddIssueURL />}
 			/>
 
 			{!authenticated && <NotLoggedIn />}
