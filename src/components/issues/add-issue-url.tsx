@@ -25,6 +25,12 @@ export const AddIssueURL = () => {
 	const [error, setError] = useState("");
 	const [open, setOpen] = useState(false);
 
+	const handleClose = () => {
+		setError("");
+		setIssueUrl("");
+		setOpen(false);
+	};
+
 	const singleIssue = useQuery({
 		queryKey: ["single-issue"],
 		queryFn: async () => {
@@ -117,8 +123,7 @@ export const AddIssueURL = () => {
 					<div className="flex justify-end gap-2">
 						<button
 							onClick={() => {
-								setIssueUrl("");
-								setOpen(false);
+								handleClose();
 							}}
 							className="px-4 py-2 border border-gray-200 dark:border-gray-800 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors text-sm"
 							type="button"
