@@ -28,6 +28,7 @@ type AuthState = {
 	pinIssue: (issue: GetIssuesFnType) => void;
 	unpinIssue: (issueId: number) => void;
 	logout: () => void;
+	updatePinnedIssue: (issue: GetIssuesFnType) => void;
 };
 
 const initialState = {
@@ -143,6 +144,22 @@ export const useAuthStore = create<AuthState>()(
 				}),
 
 			logout: () => set({ ...initialState }),
+
+			updatePinnedIssue: (issue) =>
+				set((state) => {
+					const id = issue.id;
+					return {
+						pinnedIssues: {
+							...state.pinnedIssues,
+							byId: {
+								[id]: {
+									...state.pinnedIssues.byId[id],
+									...issue,
+								},
+							},
+						},
+					};
+				}),
 		}),
 		{
 			name: "issues-tracker-app",

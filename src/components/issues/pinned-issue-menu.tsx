@@ -1,8 +1,9 @@
 import { useServerFn } from "@tanstack/react-start";
-import { Ellipsis, MessageCircleOff } from "lucide-react";
+import { ArrowDownToLine, Ellipsis, MessageCircleOff } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import type { GetIssuesFnType } from "@/actions/get-issues.functions";
+import { getSingleIssueFn } from "@/actions/get-single-issue.functions";
 import { updateIssueFn } from "@/actions/update-issue.functions";
 import {
 	DropdownMenu,
@@ -21,13 +22,12 @@ type PinnedIssueMenuProps = {
 
 export function PinnedIssueMenu({ issue }: PinnedIssueMenuProps) {
 	const installationId = useAuthStore((s) => s.installationId);
-	const pinnedIssues = useAuthStore((s) => s.pinnedIssues);
 	const unpinIssue = useAuthStore((s) => s.unpinIssue);
-	const [issueCloseInProgress, setIssueClose] = useState(false);
+	const updatePinnedIssue = useAuthStore((s) => s.updatePinnedIssue);
+	const [menuActionInProgress, setMenuActionProgress] = useState(false);
 	const [open, setOpen] = useState(false);
 	const updateIssue = useServerFn(updateIssueFn);
-
-	const isPinned = pinnedIssues.all.includes(issue.id);
+	const getSingleIssue = useServerFn(getSingleIssueFn);
 
 	const { owner, repo } = getRepoFromURL(issue.repository_url);
 
@@ -44,7 +44,7 @@ export function PinnedIssueMenu({ issue }: PinnedIssueMenuProps) {
 						onSelect={async (e) => {
 							e.preventDefault();
 
-							setIssueClose(true);
+							setMenuActionProgress(true);
 							try {
 								if (!installationId) {
 									throw new Error("installationId is missing");
@@ -68,18 +68,57 @@ export function PinnedIssueMenu({ issue }: PinnedIssueMenuProps) {
 									description: (e as Error).message,
 								});
 							} finally {
-								setIssueClose(false);
+								setMenuActionProgress(false);
 							}
 						}}
-						aria-label={isPinned ? "Unpin issue" : "Pin issue"}
-						disabled={issueCloseInProgress}
+						disabled={menuActionInProgress}
 					>
-						{issueCloseInProgress ? (
+						{menuActionInProgress ? (
 							<Spinner data-icon="inline-start" />
 						) : (
 							<MessageCircleOff data-icon="inline-start" />
 						)}
 						Close issue
+					</DropdownMenuItem>
+
+					<DropdownMenuItem
+						onSelect={async (e) => {
+							e.preventDefault();
+
+							setMenuActionProgress(true);
+							try {
+								if (!installationId) {
+									throw new Error("installationId is missing");
+								}
+
+								const updatedIssue = await getSingleIssue({
+									data: {
+										owner,
+										repo,
+										issue_number: issue.number,
+										installationId,
+									},
+								});
+
+								setOpen(false);
+
+								updatePinnedIssue(updatedIssue);
+							} catch (e) {
+								toast.error("Unable to refresh issue", {
+									description: (e as Error).message,
+								});
+							} finally {
+								setMenuActionProgress(false);
+							}
+						}}
+						disabled={menuActionInProgress}
+					>
+						{menuActionInProgress ? (
+							<Spinner data-icon="inline-start" />
+						) : (
+							<ArrowDownToLine data-icon="inline-start" />
+						)}
+						Refresh issue
 					</DropdownMenuItem>
 				</DropdownMenuGroup>
 			</DropdownMenuContent>
