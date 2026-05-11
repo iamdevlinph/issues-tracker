@@ -1,6 +1,6 @@
 import { useLocation } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { Calendar, MessageSquare, Star } from "lucide-react";
+import { Calendar, MessageCircleOff, MessageSquare, Star } from "lucide-react";
 import type { GetIssuesFnType } from "@/actions/get-issues.functions";
 import { IssueLabel } from "@/components/issues/issue-label";
 import { PinnedIssueMenu } from "@/components/issues/pinned-issue-menu";
@@ -57,7 +57,18 @@ export const IssueCard = ({ issue, options }: IssueCardProps) => {
 							</span>
 						</div>
 						<div className="flex items-center gap-2">
-							<a href={issue.html_url} target="_blank">
+							<a
+								href={issue.html_url}
+								target="_blank"
+								className="flex gap-2 items-center"
+							>
+								{issue.state === "closed" && (
+									<MessageCircleOff
+										data-icon="inline-start"
+										size={14}
+										className="text-red-500"
+									/>
+								)}
 								<h3 className="font-medium text-sm leading-snug truncate hover:underline">
 									{issue.title}
 								</h3>

@@ -31,6 +31,8 @@ export function PinnedIssueMenu({ issue }: PinnedIssueMenuProps) {
 
 	const { owner, repo } = getRepoFromURL(issue.repository_url);
 
+	const closeIssueDisabled = issue.state === "closed" || menuActionInProgress;
+
 	return (
 		<DropdownMenu open={open} onOpenChange={setOpen}>
 			<DropdownMenuTrigger asChild>
@@ -41,6 +43,7 @@ export function PinnedIssueMenu({ issue }: PinnedIssueMenuProps) {
 			<DropdownMenuContent className="w-40" align="end">
 				<DropdownMenuGroup>
 					<DropdownMenuItem
+						aria-disabled={closeIssueDisabled}
 						onSelect={async (e) => {
 							e.preventDefault();
 
@@ -71,7 +74,7 @@ export function PinnedIssueMenu({ issue }: PinnedIssueMenuProps) {
 								setMenuActionProgress(false);
 							}
 						}}
-						disabled={menuActionInProgress}
+						disabled={closeIssueDisabled}
 					>
 						{menuActionInProgress ? (
 							<Spinner data-icon="inline-start" />
@@ -99,6 +102,10 @@ export function PinnedIssueMenu({ issue }: PinnedIssueMenuProps) {
 										installationId,
 									},
 								});
+								console.log(
+									"🍉debuu ~ PinnedIssueMenu ~ updatedIssue:",
+									updatedIssue,
+								);
 
 								setOpen(false);
 
