@@ -24,7 +24,7 @@ export function PinnedIssueMenu({ issue }: PinnedIssueMenuProps) {
 	const installationId = useAuthStore((s) => s.installationId);
 	const unpinIssue = useAuthStore((s) => s.unpinIssue);
 	const updatePinnedIssue = useAuthStore((s) => s.updatePinnedIssue);
-	const [action, setAction] = useState<"close" | "refresh">("");
+	const [action, setAction] = useState<"close" | "refresh" | null>(null);
 	const [menuActionInProgress, setMenuActionProgress] = useState(false);
 	const [open, setOpen] = useState(false);
 	const updateIssue = useServerFn(updateIssueFn);
