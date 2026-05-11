@@ -153,6 +153,7 @@ export const useAuthStore = create<AuthState>()(
 						pinnedIssues: {
 							...state.pinnedIssues,
 							byId: {
+								...state.pinnedIssues.byId,
 								[id]: {
 									...state.pinnedIssues.byId[id],
 									...trimDownIssue(issue),
