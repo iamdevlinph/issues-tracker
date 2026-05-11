@@ -28,6 +28,7 @@ import { useAuthStore } from "@/stores/auth-store";
 export const AllIssuesPage = () => {
 	const installationId = useAuthStore((s) => s.installationId);
 	const authenticated = useAuthStore((s) => s.authenticated);
+	const pinnedRepos = useAuthStore((s) => s.pinnedRepos);
 	const getRepos = useServerFn(getRepositoriesFn);
 	const getIssues = useServerFn(getIssuesFn);
 	const [selectedRepo, setRepo] = useState("");
@@ -73,7 +74,9 @@ export const AllIssuesPage = () => {
 		}
 	}, []);
 
-	const pinnedCount = 0;
+	const pinnedCount = selectedRepo
+		? (pinnedRepos.byName[selectedRepo] ?? { issueIds: [] }).issueIds.length
+		: 0;
 	const totalCount = (issuesData.data ?? []).length;
 
 	return (
@@ -122,14 +125,20 @@ export const AllIssuesPage = () => {
 								</Combobox>
 
 								<div>
-									{issuesData.isFetching && <Skeleton className="h-6 w-7.5" />}
+									{!!selectedRepo && (
+										<>
+											{issuesData.isFetching && (
+												<Skeleton className="h-6 w-7.5" />
+											)}
 
-									{!issuesData.isFetching &&
-										(issuesData.data ?? []).length > 0 && (
-											<>
-												{pinnedCount}/{totalCount}
-											</>
-										)}
+											{!issuesData.isFetching &&
+												(issuesData.data ?? []).length > 0 && (
+													<>
+														{pinnedCount}/{totalCount}
+													</>
+												)}
+										</>
+									)}
 								</div>
 							</div>
 							<div className="space-y-3 mt-5">
