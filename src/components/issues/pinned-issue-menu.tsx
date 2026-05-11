@@ -102,10 +102,6 @@ export function PinnedIssueMenu({ issue }: PinnedIssueMenuProps) {
 										installationId,
 									},
 								});
-								console.log(
-									"🍉debuu ~ PinnedIssueMenu ~ updatedIssue:",
-									updatedIssue,
-								);
 
 								setOpen(false);
 
