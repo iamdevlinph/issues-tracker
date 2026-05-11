@@ -20,6 +20,7 @@ import {
 	ComboboxItem,
 	ComboboxList,
 } from "@/components/ui/combobox";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ISSUES_QUERY_KEY, REPOSITORIES_QUERY_KEY } from "@/constants";
 import { useApp } from "@/context/use-app";
 import { useAuthStore } from "@/stores/auth-store";
@@ -72,6 +73,9 @@ export const AllIssuesPage = () => {
 		}
 	}, []);
 
+	const pinnedCount = 0;
+	const totalCount = (issuesData.data ?? []).length;
+
 	return (
 		<>
 			<PageTitle
@@ -92,29 +96,42 @@ export const AllIssuesPage = () => {
 
 					{authenticated && (repositoriesData.data ?? []).length > 0 && (
 						<>
-							<Combobox
-								items={repositoriesData.data}
-								onValueChange={(e) => {
-									setRepo(e as string);
-									setSelectedRepo(e as string);
-								}}
-								value={selectedRepoContext}
-							>
-								<ComboboxInput
-									placeholder="Select a repository"
-									className="w-full md:w-md"
-								/>
-								<ComboboxContent>
-									<ComboboxEmpty>No items found.</ComboboxEmpty>
-									<ComboboxList>
-										{(item: GetRepositoriesFnType) => (
-											<ComboboxItem key={item.id} value={item.full_name}>
-												{item.full_name}
-											</ComboboxItem>
+							<div className="flex gap-2 items-center">
+								<Combobox
+									items={repositoriesData.data}
+									onValueChange={(e) => {
+										setRepo(e as string);
+										setSelectedRepo(e as string);
+									}}
+									value={selectedRepoContext}
+								>
+									<ComboboxInput
+										placeholder="Select a repository"
+										className="w-full md:w-md"
+									/>
+									<ComboboxContent>
+										<ComboboxEmpty>No items found.</ComboboxEmpty>
+										<ComboboxList>
+											{(item: GetRepositoriesFnType) => (
+												<ComboboxItem key={item.id} value={item.full_name}>
+													{item.full_name}
+												</ComboboxItem>
+											)}
+										</ComboboxList>
+									</ComboboxContent>
+								</Combobox>
+
+								<div>
+									{issuesData.isFetching && <Skeleton className="h-6 w-7.5" />}
+
+									{!issuesData.isFetching &&
+										(issuesData.data ?? []).length > 0 && (
+											<>
+												{pinnedCount}/{totalCount}
+											</>
 										)}
-									</ComboboxList>
-								</ComboboxContent>
-							</Combobox>
+								</div>
+							</div>
 							<div className="space-y-3 mt-5">
 								{issuesData.isFetching && <IssueCardSkeleton />}
 
