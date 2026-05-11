@@ -34,11 +34,14 @@ export const PinnedIssuesPage = () => {
 					<PinnedIssuesSearch search={search} setSearch={setSearch} />
 
 					{Object.entries(groupedIssues).map(([repoName, issues]) => {
+						const repoUrl = `https://github.com/${repoName}`;
 						return (
 							<motion.div key={repoName} layout>
-								<h3 className="font-semibold mb-4 text-sm text-gray-600 dark:text-gray-400 font-mono">
-									{repoName}
-								</h3>
+								<a href={repoUrl} target="_blank" className="hover:underline">
+									<h3 className="font-semibold mb-4 text-sm text-gray-600 dark:text-gray-400 font-mono">
+										{repoName}
+									</h3>
+								</a>
 
 								<div className="space-y-3">
 									<AnimatePresence>
