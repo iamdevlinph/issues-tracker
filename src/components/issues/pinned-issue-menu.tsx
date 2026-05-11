@@ -24,6 +24,7 @@ export function PinnedIssueMenu({ issue }: PinnedIssueMenuProps) {
 	const installationId = useAuthStore((s) => s.installationId);
 	const unpinIssue = useAuthStore((s) => s.unpinIssue);
 	const updatePinnedIssue = useAuthStore((s) => s.updatePinnedIssue);
+	const [action, setAction] = useState<"close" | "refresh">("");
 	const [menuActionInProgress, setMenuActionProgress] = useState(false);
 	const [open, setOpen] = useState(false);
 	const updateIssue = useServerFn(updateIssueFn);
@@ -47,6 +48,7 @@ export function PinnedIssueMenu({ issue }: PinnedIssueMenuProps) {
 						onSelect={async (e) => {
 							e.preventDefault();
 
+							setAction("close");
 							setMenuActionProgress(true);
 							try {
 								if (!installationId) {
@@ -76,7 +78,7 @@ export function PinnedIssueMenu({ issue }: PinnedIssueMenuProps) {
 						}}
 						disabled={closeIssueDisabled}
 					>
-						{menuActionInProgress ? (
+						{menuActionInProgress && action === "close" ? (
 							<Spinner data-icon="inline-start" />
 						) : (
 							<MessageCircleOff data-icon="inline-start" />
@@ -88,6 +90,7 @@ export function PinnedIssueMenu({ issue }: PinnedIssueMenuProps) {
 						onSelect={async (e) => {
 							e.preventDefault();
 
+							setAction("refresh");
 							setMenuActionProgress(true);
 							try {
 								if (!installationId) {
@@ -116,7 +119,7 @@ export function PinnedIssueMenu({ issue }: PinnedIssueMenuProps) {
 						}}
 						disabled={menuActionInProgress}
 					>
-						{menuActionInProgress ? (
+						{menuActionInProgress && action === "refresh" ? (
 							<Spinner data-icon="inline-start" />
 						) : (
 							<ArrowDownToLine data-icon="inline-start" />
