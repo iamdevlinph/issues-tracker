@@ -3,6 +3,7 @@ import { persist } from "zustand/middleware";
 import type { GetIssuesFnType } from "@/actions/get-issues.functions";
 import type { GetRepositoriesFnType } from "@/actions/get-repositories.functions";
 import { getRepoFromURL } from "@/lib/get-repo-from-url";
+import { trimDownIssue } from "@/lib/trim-down-issue-obj";
 
 type AuthState = {
 	authenticated: boolean;
@@ -71,7 +72,7 @@ export const useAuthStore = create<AuthState>()(
 								: [...state.pinnedIssues.all, issue.id],
 							byId: {
 								...state.pinnedIssues.byId,
-								[issue.id]: issue,
+								[issue.id]: { ...trimDownIssue(issue) },
 							},
 						},
 						pinnedRepos: {
@@ -154,7 +155,7 @@ export const useAuthStore = create<AuthState>()(
 							byId: {
 								[id]: {
 									...state.pinnedIssues.byId[id],
-									...issue,
+									...trimDownIssue(issue),
 								},
 							},
 						},
