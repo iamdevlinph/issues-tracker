@@ -3,6 +3,7 @@ import { persist } from "zustand/middleware";
 import type { GetIssuesFnType } from "@/actions/get-issues.functions";
 import type { GetRepositoriesFnType } from "@/actions/get-repositories.functions";
 import { getRepoFromURL } from "@/lib/get-repo-from-url";
+import { trimDownIssue } from "@/lib/trim-down-issue-obj";
 
 type AuthState = {
 	authenticated: boolean;
@@ -28,6 +29,7 @@ type AuthState = {
 	pinIssue: (issue: GetIssuesFnType) => void;
 	unpinIssue: (issueId: number) => void;
 	logout: () => void;
+	updatePinnedIssue: (issue: GetIssuesFnType) => void;
 };
 
 const initialState = {
@@ -70,7 +72,7 @@ export const useAuthStore = create<AuthState>()(
 								: [...state.pinnedIssues.all, issue.id],
 							byId: {
 								...state.pinnedIssues.byId,
-								[issue.id]: issue,
+								[issue.id]: { ...trimDownIssue(issue) },
 							},
 						},
 						pinnedRepos: {
@@ -143,6 +145,23 @@ export const useAuthStore = create<AuthState>()(
 				}),
 
 			logout: () => set({ ...initialState }),
+
+			updatePinnedIssue: (issue) =>
+				set((state) => {
+					const id = issue.id;
+					return {
+						pinnedIssues: {
+							...state.pinnedIssues,
+							byId: {
+								...state.pinnedIssues.byId,
+								[id]: {
+									...state.pinnedIssues.byId[id],
+									...trimDownIssue(issue),
+								},
+							},
+						},
+					};
+				}),
 		}),
 		{
 			name: "issues-tracker-app",
