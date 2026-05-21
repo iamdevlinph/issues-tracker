@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Plus } from "lucide-react";
-import { Activity, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { getSingleIssueFn } from "@/actions/get-single-issue.functions";
 import { Button } from "@/components/ui/button";
@@ -82,12 +82,12 @@ export const AddIssueURL = () => {
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<Activity mode={installationId ? "visible" : "hidden"}>
+				{!!installationId && (
 					<Button type="button">
 						<Plus className="w-4 h-4" />
 						Add Issue
 					</Button>
-				</Activity>
+				)}
 			</DialogTrigger>
 			<DialogContent
 				className="[&>button]:hidden"
