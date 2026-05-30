@@ -21,6 +21,7 @@
   "dependencies": {
     "@base-ui/react": "1.4.1",
     "@cloudflare/vite-plugin": "1.26.0",
+    "@icons-pack/react-simple-icons": "^13.13.0",
     "@octokit/auth-app": "8.2.0",
     "@react-native-async-storage/async-storage": "3.0.2",
     "@tailwindcss/vite": "4.1.18",
@@ -72,11 +73,5 @@
     "vite": "8.0.0",
     "vitest": "3.0.5",
     "wrangler": "4.70.0"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "lightningcss"
-    ]
   }
 }
