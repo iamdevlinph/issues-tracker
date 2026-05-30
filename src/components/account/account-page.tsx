@@ -1,17 +1,11 @@
-import { AlertCircleIcon } from "lucide-react";
 import { useEffect } from "react";
-import { GithubLogin } from "@/components/account/login-github";
-import { LogoutButton } from "@/components/account/logout-button";
-import { ManageGithubAccess } from "@/components/account/manage-github-access";
+import { GithubSection } from "@/components/account/github/github-section";
+import { GoogleSection } from "@/components/account/google/google-section";
 import { PageTitle } from "@/components/page-title";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useAuthStore } from "@/stores/auth-store";
 
 export const AccountPage = () => {
 	const setAuth = useAuthStore((s) => s.setAuth);
-	const authenticated = useAuthStore((s) => s.authenticated);
-
-	const githubLogin = useAuthStore((s) => s.githubLogin);
 
 	useEffect(() => {
 		const params = new URLSearchParams(window.location.search);
@@ -33,28 +27,9 @@ export const AccountPage = () => {
 			/>
 
 			<div className="flex flex-col gap-4">
-				{!authenticated ? (
-					<GithubLogin />
-				) : (
-					<>
-						<div>
-							Logged in as <strong>{githubLogin}</strong>
-						</div>
+				<GithubSection />
 
-						<ManageGithubAccess />
-
-						<LogoutButton />
-
-						<Alert variant="destructive" className="max-w-md">
-							<AlertCircleIcon />
-							<AlertTitle>Before you logout</AlertTitle>
-							<AlertDescription>
-								Logging out will also clear pinned issues. You will need to pin
-								them again.
-							</AlertDescription>
-						</Alert>
-					</>
-				)}
+				<GoogleSection />
 			</div>
 		</>
 	);
