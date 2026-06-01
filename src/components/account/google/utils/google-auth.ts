@@ -1,7 +1,7 @@
 import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 import { useEffect, useState } from "react";
 import { initSync } from "@/components/account/google/utils/drive-sync";
-import { G_LOCAL_EMAIL } from "@/constants";
+import { G_LOCAL_EMAIL, GOOGLE_LOCAL_DESTROY } from "@/constants";
 
 type UseGoogleAuthProps = {
 	syncOnLoad?: boolean;
@@ -63,6 +63,10 @@ export function useGoogleAuth(props?: UseGoogleAuthProps) {
 
 		await fetch("/api/auth/google-logout", {
 			method: "GET",
+		});
+
+		GOOGLE_LOCAL_DESTROY.forEach((key) => {
+			localStorage.removeItem(key);
 		});
 
 		setStatus("out");

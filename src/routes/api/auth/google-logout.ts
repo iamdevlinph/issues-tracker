@@ -1,28 +1,32 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { destroySession } from "@/actions/session.server";
-import { GOOGLE_COOKIES_DESTROY, GOOGLE_LOCAL_DESTROY } from "@/constants";
+import { GOOGLE_COOKIES_DESTROY } from "@/constants";
 
 export const Route = createFileRoute("/api/auth/google-logout")({
 	server: {
 		handlers: {
 			GET: async () => {
-				const headers = new Headers();
+				try {
+					const headers = new Headers();
 
-				GOOGLE_COOKIES_DESTROY.forEach((key) => {
-					const cookie = destroySession(key);
+					GOOGLE_COOKIES_DESTROY.forEach((key) => {
+						const cookie = destroySession(key);
 
-					headers.append("Set-Cookie", cookie);
-				});
+						headers.append("Set-Cookie", cookie);
+					});
 
-				GOOGLE_LOCAL_DESTROY.forEach((key) => {
-					localStorage.removeItem(key);
-				});
+					return new Response("Google related cookies destroyed", {
+						status: 200,
 
-				return new Response("Google related cookies destroyed", {
-					status: 200,
-
-					headers,
-				});
+						headers,
+					});
+				} catch (e) {
+					const msg = "Something went wrong when trying to logout with Google";
+					console.log(msg, e);
+					return new Response(msg, {
+						status: 500,
+					});
+				}
 			},
 		},
 	},
