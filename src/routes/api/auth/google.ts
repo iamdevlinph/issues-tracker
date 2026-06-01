@@ -8,12 +8,6 @@ import {
 	G_REFRESH_TOKEN_COOKIE,
 } from "@/constants";
 
-const oauth = new OAuth2Client(
-	import.meta.env.VITE_GOOGLE_CLIENT_ID,
-	process.env.GOOGLE_CLIENT_SECRET,
-	"postmessage",
-);
-
 export const Route = createFileRoute("/api/auth/google")({
 	server: {
 		handlers: {
@@ -21,6 +15,12 @@ export const Route = createFileRoute("/api/auth/google")({
 				return new Response("hello world");
 			},
 			POST: async ({ request }) => {
+				const oauth = new OAuth2Client(
+					import.meta.env.VITE_GOOGLE_CLIENT_ID,
+					process.env.GOOGLE_CLIENT_SECRET,
+					"postmessage",
+				);
+
 				try {
 					console.log(
 						"🍉debuu ~ import.meta.env.VITE_GOOGLE_CLIENT_ID:",
@@ -30,7 +30,10 @@ export const Route = createFileRoute("/api/auth/google")({
 						"🍉debuu ~ process.env.GOOGLE_CLIENT_SECRET:",
 						process.env.GOOGLE_CLIENT_SECRET,
 					);
-					console.log("🍉debuu ~ /api/auth/google request:", request);
+					console.log(
+						"🍉debuu ~ /api/auth/google request:",
+						JSON.stringify(request),
+					);
 					const { code } = await request.json();
 					console.log("🍉debuu ~ /api/auth/google code:", code);
 
