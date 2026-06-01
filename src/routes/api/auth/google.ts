@@ -17,6 +17,9 @@ const oauth = new OAuth2Client(
 export const Route = createFileRoute("/api/auth/google")({
 	server: {
 		handlers: {
+			GET: async () => {
+				return new Response("hello world");
+			},
 			POST: async ({ request }) => {
 				const { code } = await request.json();
 
