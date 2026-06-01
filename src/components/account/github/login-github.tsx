@@ -9,7 +9,7 @@ export const GithubLogin = () => {
 	const AUTH_URL = `${GITHUB_URL}?${params}`;
 	return (
 		<a href={AUTH_URL}>
-			<Button variant="outline">Login with github</Button>
+			<Button variant="outline">Login with Github</Button>
 		</a>
 	);
 };
