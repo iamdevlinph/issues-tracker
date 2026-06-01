@@ -210,6 +210,7 @@ export const useAuthStore = create<AuthState>()(
 						if (!error && hydratedState) {
 							// Option A: Call an action function defined on your store
 							hydratedState.setHasHydrated(true);
+							console.log("Hydration completed");
 
 							// Option B: If you passed 'set' into your config, you can use it directly:
 							// set({ hasHydrated: true })
