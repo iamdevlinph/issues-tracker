@@ -16,6 +16,7 @@ export function useGoogleAuth(props?: UseGoogleAuthProps) {
 		flow: "auth-code",
 
 		onSuccess: async (tokenResponse) => {
+			console.log("🍉debuu ~ useGoogleAuth ~ tokenResponse:", tokenResponse);
 			const res = await fetch("/api/auth/google", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },

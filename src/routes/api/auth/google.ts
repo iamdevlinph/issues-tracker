@@ -23,8 +23,10 @@ export const Route = createFileRoute("/api/auth/google")({
 			POST: async ({ request }) => {
 				try {
 					const { code } = await request.json();
+					console.log("🍉debuu ~ code:", code);
 
 					const { tokens } = await oauth.getToken(code);
+					console.log("🍉debuu ~ tokens:", tokens);
 
 					const { access_token, refresh_token, id_token, expires_in } =
 						JSON.parse(tokens as string);
