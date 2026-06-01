@@ -22,11 +22,20 @@ export const Route = createFileRoute("/api/auth/google")({
 			},
 			POST: async ({ request }) => {
 				try {
+					console.log(
+						"🍉debuu ~ import.meta.env.VITE_GOOGLE_CLIENT_ID:",
+						import.meta.env.VITE_GOOGLE_CLIENT_ID,
+					);
+					console.log(
+						"🍉debuu ~ process.env.GOOGLE_CLIENT_SECRET:",
+						process.env.GOOGLE_CLIENT_SECRET,
+					);
+					console.log("🍉debuu ~ /api/auth/google request:", request);
 					const { code } = await request.json();
-					console.log("🍉debuu ~ code:", code);
+					console.log("🍉debuu ~ /api/auth/google code:", code);
 
 					const { tokens } = await oauth.getToken(code);
-					console.log("🍉debuu ~ tokens:", tokens);
+					console.log("🍉debuu ~ /api/auth/google tokens:", tokens);
 
 					const { access_token, refresh_token, id_token, expires_in } =
 						JSON.parse(tokens as string);
