@@ -27,7 +27,7 @@ import { useAuthStore } from "@/stores/auth-store";
 
 export const AllIssuesPage = () => {
 	const installationId = useAuthStore((s) => s.installationId);
-	const authenticated = useAuthStore((s) => s.authenticated);
+	const authenticatedGithub = useAuthStore((s) => s.authenticatedGithub);
 	const pinnedRepos = useAuthStore((s) => s.pinnedRepos);
 	const getRepos = useServerFn(getRepositoriesFn);
 	const getIssues = useServerFn(getIssuesFn);
@@ -91,13 +91,12 @@ export const AllIssuesPage = () => {
 
 			{!repositoriesData.isFetching && (
 				<div>
-					{!authenticated && <NotLoggedIn />}
+					{!authenticatedGithub && <NotLoggedIn />}
 
-					{authenticated && (repositoriesData.data ?? []).length === 0 && (
-						<NoRepository />
-					)}
+					{authenticatedGithub &&
+						(repositoriesData.data ?? []).length === 0 && <NoRepository />}
 
-					{authenticated && (repositoriesData.data ?? []).length > 0 && (
+					{authenticatedGithub && (repositoriesData.data ?? []).length > 0 && (
 						<>
 							<div className="flex gap-2 items-center">
 								<Combobox
