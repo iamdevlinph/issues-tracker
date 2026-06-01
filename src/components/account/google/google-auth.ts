@@ -1,0 +1,100 @@
+import { googleLogout, useGoogleLogin } from "@react-oauth/google";
+import { useEffect, useState } from "react";
+import { initSync } from "@/components/account/google/utils/drive-sync";
+import { G_LOCAL_EMAIL } from "@/constants";
+
+type UseGoogleAuthProps = {
+	syncOnLoad?: boolean;
+};
+
+export function useGoogleAuth(props?: UseGoogleAuthProps) {
+	const [status, setStatus] = useState<"loading" | "in" | "out">("out");
+	const [email, setEmail] = useState("");
+	const { syncOnLoad } = props || {};
+
+	const login = useGoogleLogin({
+		flow: "auth-code",
+
+		onSuccess: async (tokenResponse) => {
+			const res = await fetch("/api/auth/google", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ code: tokenResponse.code }),
+			});
+
+			if (!res.ok) {
+				setStatus("out");
+				return;
+			}
+
+			const tokens = await res.json();
+
+			const response = await fetch(
+				"https://www.googleapis.com/oauth2/v3/userinfo",
+				{
+					method: "GET",
+					headers: {
+						Authorization: `Bearer ${tokens.access_token}`,
+						Accept: "application/json",
+					},
+				},
+			);
+
+			if (!response.ok) {
+				throw new Error("Failed to fetch user info");
+			}
+
+			const data = await response.json();
+			localStorage.setItem(G_LOCAL_EMAIL, data.email);
+			setEmail(data.email);
+
+			setStatus("in");
+
+			initSync();
+		},
+
+		onError: () => setStatus("out"),
+
+		scope: "email profile https://www.googleapis.com/auth/drive.appdata",
+	});
+
+	const logout = async () => {
+		googleLogout();
+
+		await fetch("/api/auth/google-logout", {
+			method: "GET",
+		});
+
+		setStatus("out");
+	};
+
+	const checkSession = async () => {
+		try {
+			const res = await fetch("/api/auth/google-session", {
+				method: "GET",
+			});
+
+			if (res.ok) {
+				setStatus("in");
+
+				const email = localStorage.getItem(G_LOCAL_EMAIL);
+				setEmail(email as string);
+
+				if (syncOnLoad) {
+					initSync();
+				}
+			} else {
+				setStatus("out");
+			}
+		} catch {
+			setStatus("out");
+		}
+	};
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: adding checkSession to dep has another error
+	useEffect(() => {
+		checkSession();
+	}, []);
+
+	return { login, logout, status, email };
+}

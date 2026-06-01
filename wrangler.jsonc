@@ -3,8 +3,10 @@
   "name": "issues-tracker-app",
   "compatibility_date": "2026-04-28",
   "compatibility_flags": ["nodejs_compat"],
-  "main": "@tanstack/react-start/server-entry",
-  // "main": "src/server.ts",
+  // "main": "@tanstack/react-start/server-entry",
+  // NOTE: fix for `createStartHandler is not a function`
+  // https://github.com/TanStack/router/issues/7285
+  "main": "src/server.ts",
   "routes": [
     {
       "pattern": "issues-tracker.devlin.ph",

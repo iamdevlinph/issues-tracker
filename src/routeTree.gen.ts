@@ -13,6 +13,9 @@ import { Route as IssuesRouteImport } from './routes/issues'
 import { Route as CallbackRouteImport } from './routes/callback'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiAuthGoogleSessionRouteImport } from './routes/api/auth/google-session'
+import { Route as ApiAuthGoogleLogoutRouteImport } from './routes/api/auth/google-logout'
+import { Route as ApiAuthGoogleRouteImport } from './routes/api/auth/google'
 
 const IssuesRoute = IssuesRouteImport.update({
   id: '/issues',
@@ -34,18 +37,39 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAuthGoogleSessionRoute = ApiAuthGoogleSessionRouteImport.update({
+  id: '/api/auth/google-session',
+  path: '/api/auth/google-session',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAuthGoogleLogoutRoute = ApiAuthGoogleLogoutRouteImport.update({
+  id: '/api/auth/google-logout',
+  path: '/api/auth/google-logout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAuthGoogleRoute = ApiAuthGoogleRouteImport.update({
+  id: '/api/auth/google',
+  path: '/api/auth/google',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
   '/callback': typeof CallbackRoute
   '/issues': typeof IssuesRoute
+  '/api/auth/google': typeof ApiAuthGoogleRoute
+  '/api/auth/google-logout': typeof ApiAuthGoogleLogoutRoute
+  '/api/auth/google-session': typeof ApiAuthGoogleSessionRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
   '/callback': typeof CallbackRoute
   '/issues': typeof IssuesRoute
+  '/api/auth/google': typeof ApiAuthGoogleRoute
+  '/api/auth/google-logout': typeof ApiAuthGoogleLogoutRoute
+  '/api/auth/google-session': typeof ApiAuthGoogleSessionRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +77,38 @@ export interface FileRoutesById {
   '/account': typeof AccountRoute
   '/callback': typeof CallbackRoute
   '/issues': typeof IssuesRoute
+  '/api/auth/google': typeof ApiAuthGoogleRoute
+  '/api/auth/google-logout': typeof ApiAuthGoogleLogoutRoute
+  '/api/auth/google-session': typeof ApiAuthGoogleSessionRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/account' | '/callback' | '/issues'
+  fullPaths:
+    | '/'
+    | '/account'
+    | '/callback'
+    | '/issues'
+    | '/api/auth/google'
+    | '/api/auth/google-logout'
+    | '/api/auth/google-session'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/account' | '/callback' | '/issues'
-  id: '__root__' | '/' | '/account' | '/callback' | '/issues'
+  to:
+    | '/'
+    | '/account'
+    | '/callback'
+    | '/issues'
+    | '/api/auth/google'
+    | '/api/auth/google-logout'
+    | '/api/auth/google-session'
+  id:
+    | '__root__'
+    | '/'
+    | '/account'
+    | '/callback'
+    | '/issues'
+    | '/api/auth/google'
+    | '/api/auth/google-logout'
+    | '/api/auth/google-session'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,6 +116,9 @@ export interface RootRouteChildren {
   AccountRoute: typeof AccountRoute
   CallbackRoute: typeof CallbackRoute
   IssuesRoute: typeof IssuesRoute
+  ApiAuthGoogleRoute: typeof ApiAuthGoogleRoute
+  ApiAuthGoogleLogoutRoute: typeof ApiAuthGoogleLogoutRoute
+  ApiAuthGoogleSessionRoute: typeof ApiAuthGoogleSessionRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -99,6 +151,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/auth/google-session': {
+      id: '/api/auth/google-session'
+      path: '/api/auth/google-session'
+      fullPath: '/api/auth/google-session'
+      preLoaderRoute: typeof ApiAuthGoogleSessionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/auth/google-logout': {
+      id: '/api/auth/google-logout'
+      path: '/api/auth/google-logout'
+      fullPath: '/api/auth/google-logout'
+      preLoaderRoute: typeof ApiAuthGoogleLogoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/auth/google': {
+      id: '/api/auth/google'
+      path: '/api/auth/google'
+      fullPath: '/api/auth/google'
+      preLoaderRoute: typeof ApiAuthGoogleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -107,6 +180,9 @@ const rootRouteChildren: RootRouteChildren = {
   AccountRoute: AccountRoute,
   CallbackRoute: CallbackRoute,
   IssuesRoute: IssuesRoute,
+  ApiAuthGoogleRoute: ApiAuthGoogleRoute,
+  ApiAuthGoogleLogoutRoute: ApiAuthGoogleLogoutRoute,
+  ApiAuthGoogleSessionRoute: ApiAuthGoogleSessionRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

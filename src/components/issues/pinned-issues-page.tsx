@@ -11,7 +11,7 @@ import { useAuthStore } from "@/stores/auth-store";
 
 export const PinnedIssuesPage = () => {
 	const pinnedIssues = useAuthStore((s) => s.pinnedIssues);
-	const authenticated = useAuthStore((s) => s.authenticated);
+	const authenticatedGithub = useAuthStore((s) => s.authenticatedGithub);
 	const hasPinnedIssues = (pinnedIssues.all ?? []).length > 0;
 	const [search, setSearch] = useState("");
 
@@ -25,11 +25,11 @@ export const PinnedIssuesPage = () => {
 				aside={<AddIssueURL />}
 			/>
 
-			{!authenticated && <NotLoggedIn />}
+			{!authenticatedGithub && <NotLoggedIn />}
 
-			{authenticated && !hasPinnedIssues && <NoPinnedIssues />}
+			{authenticatedGithub && !hasPinnedIssues && <NoPinnedIssues />}
 
-			{authenticated && hasPinnedIssues && (
+			{authenticatedGithub && hasPinnedIssues && (
 				<div className="space-y-8">
 					<PinnedIssuesSearch search={search} setSearch={setSearch} />
 

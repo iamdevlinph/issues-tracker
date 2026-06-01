@@ -3,6 +3,7 @@ import { accessToken } from "@/actions/access-token.server";
 import { getInstallations } from "@/actions/get-installations.server";
 import { oauthOctokit } from "@/actions/github-oauth.server";
 import { setSession } from "@/actions/session.server";
+import { GITHUB_COOKIE_NAME } from "@/constants";
 
 export const Route = createFileRoute("/callback")({
 	server: {
@@ -51,7 +52,7 @@ export const Route = createFileRoute("/callback")({
 						status: 302,
 						headers: {
 							Location: redirectUrl,
-							"Set-Cookie": setSession(token),
+							"Set-Cookie": setSession(GITHUB_COOKIE_NAME, token),
 						},
 					});
 				} catch (e) {

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { useAuthStore } from "@/stores/auth-store";
 
-export function LogoutButton() {
+export function GithubLogout() {
 	const [loading, setLoading] = useState(false);
 	const logout = useAuthStore((s) => s.logout);
 
