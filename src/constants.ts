@@ -6,3 +6,21 @@ export const GC_TIME = GC_TIME_MINS * 60 * 10000;
 
 export const REPOSITORIES_QUERY_KEY = "repositories";
 export const ISSUES_QUERY_KEY = "issues";
+
+export const GITHUB_COOKIE_NAME = "github_token";
+
+export const G_ACCESS_TOKEN_COOKIE = "G_ACCESS_TOKEN_COOKIE";
+export const G_REFRESH_TOKEN_COOKIE = "G_REFRESH_TOKEN_COOKIE";
+export const G_ID_TOKEN_COOKIE = "G_ID_TOKEN_COOKIE";
+export const G_EXPIRES_IN_COOKIE = "G_EXPIRES_IN_COOKIE";
+
+export const GOOGLE_COOKIES_DESTROY = [
+	G_ACCESS_TOKEN_COOKIE,
+	G_REFRESH_TOKEN_COOKIE,
+	G_ID_TOKEN_COOKIE,
+	G_EXPIRES_IN_COOKIE,
+];
+
+export const G_LOCAL_EMAIL = "G_LOCAL_EMAIL";
+
+export const GOOGLE_LOCAL_DESTROY = [G_LOCAL_EMAIL];
