@@ -14,26 +14,8 @@ export const Route = createFileRoute("/api/auth/google")({
 				return new Response("hello world");
 			},
 			POST: async ({ request }) => {
-				// const oauth = new OAuth2Client(
-				// 	import.meta.env.VITE_GOOGLE_CLIENT_ID,
-				// 	process.env.GOOGLE_CLIENT_SECRET,
-				// 	"postmessage",
-				// );
-
 				try {
 					const { code } = await request.json();
-					console.log("🍉debuu ~ code:", code);
-
-					// const data = await oauth.getToken(code);
-					// console.log(
-					// 	"🍉debuu ~ /api/auth/google data:",
-					// 	JSON.stringify(data, null, 2),
-					// );
-
-					// console.log(
-					// 	"🍉debuu ~ /api/auth/google typeof data.tokens:",
-					// 	typeof data.tokens,
-					// );
 
 					const res = await fetch("https://oauth2.googleapis.com/token", {
 						method: "POST",
@@ -48,11 +30,8 @@ export const Route = createFileRoute("/api/auth/google")({
 							grant_type: "authorization_code",
 						}),
 					});
-					console.log("🍉debuu ~ res:", res);
 
 					const tokens = await res.json();
-					console.log("🍉debuu ~ tokens:", tokens);
-					console.log("🍉debuu ~ typeof tokens:", typeof tokens);
 
 					const { access_token, refresh_token, id_token, expires_in } = tokens;
 
