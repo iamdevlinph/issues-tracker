@@ -21,31 +21,36 @@ export const Route = createFileRoute("/api/auth/google")({
 				return new Response("hello world");
 			},
 			POST: async ({ request }) => {
-				const { code } = await request.json();
+				try {
+					const { code } = await request.json();
 
-				const { tokens } = await oauth.getToken(code);
+					const { tokens } = await oauth.getToken(code);
 
-				const { access_token, refresh_token, id_token, expires_in } =
-					JSON.parse(tokens as string);
+					const { access_token, refresh_token, id_token, expires_in } =
+						JSON.parse(tokens as string);
 
-				const headers = new Headers();
-				headers.append(
-					"Set-Cookie",
-					setSession(G_ACCESS_TOKEN_COOKIE, access_token),
-				);
-				headers.append(
-					"Set-Cookie",
-					setSession(G_REFRESH_TOKEN_COOKIE, refresh_token),
-				);
-				headers.append("Set-Cookie", setSession(G_ID_TOKEN_COOKIE, id_token));
-				headers.append(
-					"Set-Cookie",
-					setSession(G_EXPIRES_IN_COOKIE, expires_in),
-				);
+					const headers = new Headers();
+					headers.append(
+						"Set-Cookie",
+						setSession(G_ACCESS_TOKEN_COOKIE, access_token),
+					);
+					headers.append(
+						"Set-Cookie",
+						setSession(G_REFRESH_TOKEN_COOKIE, refresh_token),
+					);
+					headers.append("Set-Cookie", setSession(G_ID_TOKEN_COOKIE, id_token));
+					headers.append(
+						"Set-Cookie",
+						setSession(G_EXPIRES_IN_COOKIE, expires_in),
+					);
 
-				return new Response(JSON.stringify({ access_token }), {
-					headers,
-				});
+					return new Response(JSON.stringify({ access_token }), {
+						headers,
+					});
+				} catch (e) {
+					console.log("/api/auth/google", e);
+					return new Response("Something went wrong");
+				}
 			},
 		},
 	},
