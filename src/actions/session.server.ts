@@ -1,25 +1,23 @@
 import { parse, serialize } from "cookie";
 
-export const COOKIE_NAME = "github_token";
-
-export function setSession(token: string) {
-	return serialize(COOKIE_NAME, token, {
+export function setSession(cookie: string, token: string) {
+	return serialize(cookie, token, {
 		httpOnly: true,
-		secure: false,
+		secure: true,
 		sameSite: "lax",
 		path: "/",
 		maxAge: 60 * 60 * 24 * 30,
 	});
 }
 
-export function getSession(request: Request) {
+export function getSession(cookie: string, request: Request) {
 	const cookies = parse(request.headers.get("cookie") || "");
 
-	return cookies[COOKIE_NAME];
+	return cookies[cookie];
 }
 
-export function destroySession() {
-	return serialize(COOKIE_NAME, "", {
+export function destroySession(cookie: string) {
+	return serialize(cookie, "", {
 		httpOnly: true,
 		secure: false,
 		sameSite: "lax",

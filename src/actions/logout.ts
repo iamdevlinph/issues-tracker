@@ -1,17 +1,11 @@
 import { createServerFn } from "@tanstack/react-start";
-import { serialize } from "cookie";
-import { COOKIE_NAME } from "@/actions/session.server";
+import { destroySession } from "@/actions/session.server";
+import { GITHUB_COOKIE_NAME } from "@/constants";
 
 export const logoutServerFn = createServerFn({
 	method: "POST",
 }).handler(async () => {
-	const cookie = serialize(COOKIE_NAME, "", {
-		httpOnly: true,
-		secure: false,
-		sameSite: "lax",
-		path: "/",
-		expires: new Date(0),
-	});
+	const cookie = destroySession(GITHUB_COOKIE_NAME);
 
 	return new Response(null, {
 		status: 200,
