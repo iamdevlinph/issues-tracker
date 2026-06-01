@@ -23,20 +23,39 @@ export const Route = createFileRoute("/api/auth/google")({
 
 				try {
 					const { code } = await request.json();
+					console.log("🍉debuu ~ code:", code);
 
-					const data = await oauth.getToken(code);
-					console.log(
-						"🍉debuu ~ /api/auth/google data:",
-						JSON.stringify(data, null, 2),
-					);
+					// const data = await oauth.getToken(code);
+					// console.log(
+					// 	"🍉debuu ~ /api/auth/google data:",
+					// 	JSON.stringify(data, null, 2),
+					// );
 
-					console.log(
-						"🍉debuu ~ /api/auth/google typeof data.tokens:",
-						typeof data.tokens,
-					);
+					// console.log(
+					// 	"🍉debuu ~ /api/auth/google typeof data.tokens:",
+					// 	typeof data.tokens,
+					// );
 
-					const { access_token, refresh_token, id_token, expires_in } =
-						JSON.parse(data.tokens as string);
+					const res = await fetch("https://oauth2.googleapis.com/token", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/x-www-form-urlencoded",
+						},
+						body: new URLSearchParams({
+							code: code as string,
+							client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID as string,
+							client_secret: process.env.GOOGLE_CLIENT_SECRET as string,
+							redirect_uri: "postmessage",
+							grant_type: "authorization_code",
+						}),
+					});
+					console.log("🍉debuu ~ res:", res);
+
+					const tokens = await res.json();
+					console.log("🍉debuu ~ tokens:", tokens);
+					console.log("🍉debuu ~ typeof tokens:", typeof tokens);
+
+					const { access_token, refresh_token, id_token, expires_in } = tokens;
 
 					const headers = new Headers();
 					headers.append(
