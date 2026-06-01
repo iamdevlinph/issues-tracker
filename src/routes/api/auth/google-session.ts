@@ -24,7 +24,11 @@ export const Route = createFileRoute("/api/auth/google-session")({
 				const headers = new Headers();
 
 				// refresh token if expires in already behind Date.now
-				if (parseInt(expiresIn as string) <= Date.now()) {
+				// or if expires_in is 3599 (default value)
+				if (
+					parseInt(expiresIn as string) <= Date.now() ||
+					parseInt(expiresIn as string) === 3599
+				) {
 					const res = await fetch("https://oauth2.googleapis.com/token", {
 						method: "POST",
 						headers: {
