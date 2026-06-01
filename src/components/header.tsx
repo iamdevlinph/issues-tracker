@@ -1,5 +1,5 @@
 import { GitPullRequest, Menu } from "lucide-react";
-import { useGoogleAuth } from "@/components/account/google/google-auth";
+import { useGoogleAuth } from "@/components/account/google/utils/google-auth";
 import { Nav } from "@/components/navigation";
 import { ModeToggleBtn } from "@/components/themes/mode-toggle-btn";
 import {

@@ -69,6 +69,7 @@ export function useGoogleAuth(props?: UseGoogleAuthProps) {
 	};
 
 	const checkSession = async () => {
+		console.log("Checking session");
 		try {
 			const res = await fetch("/api/auth/google-session", {
 				method: "GET",
@@ -88,6 +89,8 @@ export function useGoogleAuth(props?: UseGoogleAuthProps) {
 			}
 		} catch {
 			setStatus("out");
+		} finally {
+			console.log("Done checking session. Status: ", status);
 		}
 	};
 

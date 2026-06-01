@@ -1,5 +1,5 @@
 import { SiGoogledrive } from "@icons-pack/react-simple-icons";
-import { useGoogleAuth } from "@/components/account/google/google-auth";
+import { useGoogleAuth } from "@/components/account/google/utils/google-auth";
 import { Button } from "@/components/ui/button";
 import {
 	Card,

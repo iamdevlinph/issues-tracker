@@ -10,9 +10,6 @@ import {
 export const Route = createFileRoute("/api/auth/google")({
 	server: {
 		handlers: {
-			GET: async () => {
-				return new Response("hello world");
-			},
 			POST: async ({ request }) => {
 				try {
 					const { code } = await request.json();
@@ -47,7 +44,10 @@ export const Route = createFileRoute("/api/auth/google")({
 					headers.append("Set-Cookie", setSession(G_ID_TOKEN_COOKIE, id_token));
 					headers.append(
 						"Set-Cookie",
-						setSession(G_EXPIRES_IN_COOKIE, expires_in),
+						setSession(
+							G_EXPIRES_IN_COOKIE,
+							(Date.now() + expires_in * 1000).toString(),
+						),
 					);
 
 					return new Response(JSON.stringify({ access_token }), {
