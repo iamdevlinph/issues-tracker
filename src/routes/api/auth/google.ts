@@ -54,7 +54,6 @@ export const Route = createFileRoute("/api/auth/google")({
 						headers,
 					});
 				} catch (e) {
-					console.log("/api/auth/google", e);
 					return new Response("Something went wrong");
 				}
 			},
