@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { OAuth2Client } from "google-auth-library";
 import { setSession } from "@/actions/session.server";
 import {
 	G_ACCESS_TOKEN_COOKIE,
@@ -15,11 +14,11 @@ export const Route = createFileRoute("/api/auth/google")({
 				return new Response("hello world");
 			},
 			POST: async ({ request }) => {
-				const oauth = new OAuth2Client(
-					import.meta.env.VITE_GOOGLE_CLIENT_ID,
-					process.env.GOOGLE_CLIENT_SECRET,
-					"postmessage",
-				);
+				// const oauth = new OAuth2Client(
+				// 	import.meta.env.VITE_GOOGLE_CLIENT_ID,
+				// 	process.env.GOOGLE_CLIENT_SECRET,
+				// 	"postmessage",
+				// );
 
 				try {
 					const { code } = await request.json();
