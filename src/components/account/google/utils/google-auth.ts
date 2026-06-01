@@ -69,6 +69,7 @@ export function useGoogleAuth(props?: UseGoogleAuthProps) {
 	};
 
 	const checkSession = async () => {
+		let sessionStatus = status;
 		console.log("Checking session");
 		try {
 			const res = await fetch("/api/auth/google-session", {
@@ -77,6 +78,7 @@ export function useGoogleAuth(props?: UseGoogleAuthProps) {
 
 			if (res.ok) {
 				setStatus("in");
+				sessionStatus = "in";
 
 				const email = localStorage.getItem(G_LOCAL_EMAIL);
 				setEmail(email as string);
@@ -86,11 +88,13 @@ export function useGoogleAuth(props?: UseGoogleAuthProps) {
 				}
 			} else {
 				setStatus("out");
+				sessionStatus = "out";
 			}
 		} catch {
 			setStatus("out");
+			sessionStatus = "out";
 		} finally {
-			console.log("Done checking session. Status: ", status);
+			console.log("Done checking session. Status: ", sessionStatus);
 		}
 	};
 
