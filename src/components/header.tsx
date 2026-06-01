@@ -1,4 +1,5 @@
 import { GitPullRequest, Menu } from "lucide-react";
+import { useGoogleAuth } from "@/components/account/google/google-auth";
 import { Nav } from "@/components/navigation";
 import { ModeToggleBtn } from "@/components/themes/mode-toggle-btn";
 import {
@@ -9,6 +10,8 @@ import {
 } from "@/components/ui/sheet";
 
 export default function Header() {
+	useGoogleAuth({ syncOnLoad: true });
+
 	return (
 		<header className="border-b border-gray-200 dark:border-gray-800 fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-950">
 			<div className="px-6 py-4 flex items-center justify-between">
