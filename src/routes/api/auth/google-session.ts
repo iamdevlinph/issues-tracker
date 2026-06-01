@@ -25,6 +25,7 @@ export const Route = createFileRoute("/api/auth/google-session")({
 
 				// refresh token if expires in already behind Date.now
 				// or if expires_in is 3599 (default value)
+				// at this point expires_in should be Date.now() + 1 hour
 				if (
 					parseInt(expiresIn as string, 10) <= Date.now() ||
 					parseInt(expiresIn as string, 10) === 3599
