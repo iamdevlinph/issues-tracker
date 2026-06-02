@@ -1,4 +1,4 @@
-import { getContrastColor } from "@/lib/get-contrast-color";
+import { readableColor } from "common-utils-pkg";
 
 type IssueLabelProps = {
 	label: string;
@@ -8,7 +8,7 @@ type IssueLabelProps = {
 export function IssueLabel({ label, color }: IssueLabelProps) {
 	const bg = `#${color}`;
 
-	const text = getContrastColor(color);
+	const text = readableColor(color);
 
 	return (
 		<div
