@@ -11,6 +11,7 @@ export const trimDownIssue = (issue: GetIssuesFnType) => {
 		title,
 		html_url,
 		number,
+		created_at,
 	} = issue;
 
 	return {
@@ -23,5 +24,6 @@ export const trimDownIssue = (issue: GetIssuesFnType) => {
 		title,
 		html_url,
 		number,
+		created_at,
 	};
 };
