@@ -25,7 +25,7 @@ export const Route = createFileRoute("/api/auth/google")({
 
 					const tokens = await res.json();
 
-					const { access_token, refresh_token, expires_in } = tokens;
+					const { access_token, refresh_token } = tokens;
 
 					const headers = new Headers();
 					headers.append(
