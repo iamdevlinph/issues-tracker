@@ -75,6 +75,8 @@ export function useGoogleAuth(props?: UseGoogleAuthProps) {
 			localStorage.removeItem(key);
 		});
 
+		sessionStorage.clear();
+
 		setStatus("out");
 	};
 
