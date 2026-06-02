@@ -76,7 +76,7 @@ export async function download(): Promise<Backup | null> {
 	}
 }
 
-export async function upload(data: Backup) {
+export async function upload(data: Backup, signal?: AbortSignal) {
 	try {
 		if (!fileId) return;
 
@@ -88,13 +88,19 @@ export async function upload(data: Backup) {
 				method: "PATCH",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(data),
+				signal,
 			},
 		);
 	} catch (e) {
+		if ((e as DOMException).name === "AbortError") {
+			return;
+		}
+
 		toast.error("Something went wrong uploading file", {
 			description: (e as Error).message,
 		});
-		return null;
+
+		throw e;
 	} finally {
 		useAuthStore.getState().setSyncInProgress(false);
 	}
@@ -144,7 +150,7 @@ export async function initSync() {
 	}
 }
 
-let isSyncing = false;
+let uploadController: AbortController | null = null;
 
 function setupAutoSync() {
 	const unsubscribe = useAuthStore.subscribe(
@@ -152,26 +158,33 @@ function setupAutoSync() {
 		(newValue, prevValue) => {
 			if (newValue === prevValue) return;
 
-			// 🚨 prevent sync loop re-entry
-			if (isSyncing) return;
-
 			clearTimeout(debounce);
 
 			debounce = window.setTimeout(async () => {
 				toast.info("Sync start");
-				isSyncing = true;
+				const controller = new AbortController();
 				useAuthStore.getState().setSyncInProgress(true);
+
+				uploadController?.abort();
+				uploadController = controller;
 
 				try {
 					const data = select(useAuthStore.getState());
-					await upload(data);
+					await upload(data, controller.signal);
 
-					toast.success("Sync success");
+					if (!controller.signal.aborted) {
+						toast.success("Sync success");
+					}
 				} catch (e) {
-					toast.error("Sync failed", { description: (e as Error).message });
+					if ((e as DOMException).name !== "AbortError") {
+						toast.error("Sync failed", {
+							description: (e as Error).message,
+						});
+					}
 				} finally {
-					useAuthStore.getState().setSyncInProgress(false);
-					isSyncing = false;
+					if (uploadController === controller) {
+						useAuthStore.getState().setSyncInProgress(false);
+					}
 				}
 			}, 800);
 		},
