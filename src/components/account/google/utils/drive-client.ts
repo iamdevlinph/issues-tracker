@@ -1,7 +1,7 @@
-import { getGoogleAccessTokenFn } from "@/components/account/google/utils/get-google-access-token";
+import { G_ACCESS_TOKEN_SESSION } from "@/constants";
 
 export async function driveFetch(input: RequestInfo, init?: RequestInit) {
-	const token = await getGoogleAccessTokenFn();
+	const token = sessionStorage.getItem(G_ACCESS_TOKEN_SESSION);
 
 	if (!token) throw new Error("No token");
 

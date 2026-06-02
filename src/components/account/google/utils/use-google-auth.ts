@@ -1,7 +1,11 @@
 import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 import { useEffect, useState } from "react";
 import { initSync } from "@/components/account/google/utils/drive-sync";
-import { G_LOCAL_EMAIL, GOOGLE_LOCAL_DESTROY } from "@/constants";
+import {
+	G_ACCESS_TOKEN_SESSION,
+	G_LOCAL_EMAIL,
+	GOOGLE_LOCAL_DESTROY,
+} from "@/constants";
 
 type UseGoogleAuthProps = {
 	syncOnLoad?: boolean;
@@ -39,6 +43,8 @@ export function useGoogleAuth(props?: UseGoogleAuthProps) {
 					},
 				},
 			);
+
+			sessionStorage.setItem(G_ACCESS_TOKEN_SESSION, tokens.access_token);
 
 			if (!response.ok) {
 				throw new Error("Failed to fetch user info");
@@ -84,6 +90,10 @@ export function useGoogleAuth(props?: UseGoogleAuthProps) {
 				setStatus("in");
 				sessionStatus = "in";
 
+				const tokens = await res.json();
+
+				sessionStorage.setItem(G_ACCESS_TOKEN_SESSION, tokens.access_token);
+
 				const email = localStorage.getItem(G_LOCAL_EMAIL);
 				setEmail(email as string);
 
@@ -97,13 +107,15 @@ export function useGoogleAuth(props?: UseGoogleAuthProps) {
 		} catch {
 			setStatus("out");
 			sessionStatus = "out";
-		} finally {
-			console.log("Done checking session. Status: ", sessionStatus);
 		}
+
+		console.log("Done checking session. Status:", sessionStatus);
 	};
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: adding checkSession to dep has another error
 	useEffect(() => {
+		// this will be called twice, but if i only call this once
+		// the status state is not updated properly
 		checkSession();
 	}, []);
 

@@ -1,10 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { setSession } from "@/actions/session.server";
-import {
-	G_ACCESS_TOKEN_COOKIE,
-	G_EXPIRES_IN_COOKIE,
-	G_REFRESH_TOKEN_COOKIE,
-} from "@/constants";
+import { G_REFRESH_TOKEN_COOKIE } from "@/constants";
 
 export const Route = createFileRoute("/api/auth/google")({
 	server: {
@@ -34,18 +30,7 @@ export const Route = createFileRoute("/api/auth/google")({
 					const headers = new Headers();
 					headers.append(
 						"Set-Cookie",
-						setSession(G_ACCESS_TOKEN_COOKIE, access_token),
-					);
-					headers.append(
-						"Set-Cookie",
 						setSession(G_REFRESH_TOKEN_COOKIE, refresh_token),
-					);
-					headers.append(
-						"Set-Cookie",
-						setSession(
-							G_EXPIRES_IN_COOKIE,
-							(Date.now() + expires_in * 1000).toString(),
-						),
 					);
 
 					return new Response(JSON.stringify({ access_token }), {
