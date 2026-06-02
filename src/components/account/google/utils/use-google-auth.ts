@@ -77,6 +77,8 @@ export function useGoogleAuth(props?: UseGoogleAuthProps) {
 
 		sessionStorage.clear();
 
+		setEmail("");
+
 		setStatus("out");
 	};
 
