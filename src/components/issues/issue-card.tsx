@@ -56,7 +56,7 @@ export const IssueCard = ({ issue, options }: IssueCardProps) => {
 								{issue.comments}
 							</span>
 						</div>
-						<div className="flex items-center gap-2">
+						<div className="flex md:items-center gap-2 flex-col md:flex-row">
 							<a
 								href={issue.html_url}
 								target="_blank"
@@ -69,7 +69,7 @@ export const IssueCard = ({ issue, options }: IssueCardProps) => {
 										className="text-red-500"
 									/>
 								)}
-								<h3 className="font-medium text-sm leading-snug truncate hover:underline">
+								<h3 className="font-medium text-sm leading-snug hover:underline">
 									{issue.title}
 								</h3>
 							</a>
