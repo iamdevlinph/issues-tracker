@@ -57,33 +57,47 @@ async function createFile(data: Backup) {
 }
 
 export async function download(): Promise<Backup | null> {
-	if (!fileId) return null;
-	useAuthStore.getState().setSyncInProgress(true);
+	try {
+		if (!fileId) return null;
+		useAuthStore.getState().setSyncInProgress(true);
 
-	const res = await driveFetch(
-		`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
-	);
+		const res = await driveFetch(
+			`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
+		);
 
-	useAuthStore.getState().setSyncInProgress(false);
-
-	return res.json();
+		return res.json();
+	} catch (e) {
+		toast.error("Something went wrong downloading remote file", {
+			description: (e as Error).message,
+		});
+		return null;
+	} finally {
+		useAuthStore.getState().setSyncInProgress(false);
+	}
 }
 
 export async function upload(data: Backup) {
-	if (!fileId) return;
+	try {
+		if (!fileId) return;
 
-	useAuthStore.getState().setSyncInProgress(true);
+		useAuthStore.getState().setSyncInProgress(true);
 
-	await driveFetch(
-		`https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`,
-		{
-			method: "PATCH",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(data),
-		},
-	);
-
-	useAuthStore.getState().setSyncInProgress(false);
+		await driveFetch(
+			`https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`,
+			{
+				method: "PATCH",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(data),
+			},
+		);
+	} catch (e) {
+		toast.error("Something went wrong uploading file", {
+			description: (e as Error).message,
+		});
+		return null;
+	} finally {
+		useAuthStore.getState().setSyncInProgress(false);
+	}
 }
 
 export async function initSync() {
