@@ -4,7 +4,7 @@ export function setSession(cookie: string, token: string) {
 	return serialize(cookie, token, {
 		httpOnly: true,
 		secure: true,
-		sameSite: "lax",
+		sameSite: "strict",
 		path: "/",
 		maxAge: 60 * 60 * 24 * 30,
 	});
