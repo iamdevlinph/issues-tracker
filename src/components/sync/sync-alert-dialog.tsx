@@ -1,4 +1,5 @@
 import { readableBytes } from "common-utils-pkg";
+import { useState } from "react";
 import {
 	download,
 	select,
@@ -13,11 +14,16 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Spinner } from "@/components/ui/spinner";
 import { useAuthStore } from "@/stores/auth-store";
 
 export function SyncConflictDialog() {
+	const [buttonClicked, setButtonClicked] = useState<
+		"local" | "remote" | undefined
+	>(undefined);
 	const conflict = useAuthStore((s) => s.syncConflict);
 	const setConflict = useAuthStore((s) => s.setSyncConflict);
+	const syncInProgress = useAuthStore((s) => s.syncInProgress);
 
 	if (!conflict) return null;
 
@@ -44,13 +50,18 @@ export function SyncConflictDialog() {
 
 						<AlertDialogAction
 							onClick={async () => {
+								setButtonClicked("local");
 								// KEEP LOCAL
 								await upload(select(useAuthStore.getState()));
 								setConflict(null);
 							}}
 							className="w-full sm:w-max self-center"
 							variant="secondary"
+							disabled={syncInProgress}
 						>
+							{syncInProgress && buttonClicked === "local" && (
+								<Spinner data-icon="inline-start" />
+							)}
 							Keep Local
 						</AlertDialogAction>
 					</div>
@@ -66,6 +77,7 @@ export function SyncConflictDialog() {
 
 						<AlertDialogAction
 							onClick={() => {
+								setButtonClicked("remote");
 								// KEEP REMOTE
 								setConflict(null);
 
@@ -82,7 +94,11 @@ export function SyncConflictDialog() {
 								})();
 							}}
 							className="w-full  sm:w-max flex self-center"
+							disabled={syncInProgress}
 						>
+							{syncInProgress && buttonClicked === "remote" && (
+								<Spinner data-icon="inline-start" />
+							)}
 							Keep Remote
 						</AlertDialogAction>
 					</div>

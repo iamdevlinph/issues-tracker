@@ -58,16 +58,21 @@ async function createFile(data: Backup) {
 
 export async function download(): Promise<Backup | null> {
 	if (!fileId) return null;
+	useAuthStore.getState().setSyncInProgress(true);
 
 	const res = await driveFetch(
 		`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
 	);
+
+	useAuthStore.getState().setSyncInProgress(false);
 
 	return res.json();
 }
 
 export async function upload(data: Backup) {
 	if (!fileId) return;
+
+	useAuthStore.getState().setSyncInProgress(true);
 
 	await driveFetch(
 		`https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`,
@@ -77,6 +82,8 @@ export async function upload(data: Backup) {
 			body: JSON.stringify(data),
 		},
 	);
+
+	useAuthStore.getState().setSyncInProgress(false);
 }
 
 export async function initSync() {
