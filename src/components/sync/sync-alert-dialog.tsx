@@ -15,6 +15,7 @@ import {
 	AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Spinner } from "@/components/ui/spinner";
+import { fmt } from "@/lib/utils";
 import { useAuthStore } from "@/stores/auth-store";
 
 export function SyncConflictDialog() {
@@ -26,8 +27,6 @@ export function SyncConflictDialog() {
 	const syncInProgress = useAuthStore((s) => s.syncInProgress);
 
 	if (!conflict) return null;
-
-	const fmt = (ts: number) => new Date(ts).toLocaleString();
 
 	return (
 		<AlertDialog open={!!conflict}>

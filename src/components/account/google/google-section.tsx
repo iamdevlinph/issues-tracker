@@ -9,12 +9,14 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
+import { fmt } from "@/lib/utils";
 import { useAuthStore } from "@/stores/auth-store";
 
 export const GoogleSection = () => {
 	const { status, login, logout, email } = useGoogleAuth();
 	const syncInProgress = useAuthStore((s) => s.syncInProgress);
 	const authenticatedGithub = useAuthStore((s) => s.authenticatedGithub);
+	const backupUpdatedAt = useAuthStore((s) => s.backupUpdatedAt);
 	const isHydrated = useAuthStore((s) => s.isHydrated);
 
 	return (
@@ -33,7 +35,10 @@ export const GoogleSection = () => {
 				<div className="flex flex-col gap-5">
 					{!!email && (
 						<div>
-							Logged in as <strong className="underline">{email}</strong>
+							<div>
+								Logged in as <strong className="underline">{email}</strong>
+							</div>
+							<div className="text-xs">Last sync: {fmt(backupUpdatedAt)}</div>
 						</div>
 					)}
 					<div className="w-max flex gap-2">
