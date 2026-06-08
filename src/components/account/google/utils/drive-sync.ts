@@ -1,5 +1,6 @@
 import { toast } from "sonner";
 import { driveFetch } from "@/components/account/google/utils/drive-client";
+import { G_ACCESS_TOKEN_SESSION } from "@/constants";
 import { type AuthState, useAuthStore } from "@/stores/auth-store";
 
 const FILE_NAME = "state.json";
@@ -156,6 +157,15 @@ function setupAutoSync() {
 	const unsubscribe = useAuthStore.subscribe(
 		(state) => state.backupUpdatedAt,
 		(newValue, prevValue) => {
+			// if not logged in with google skip sync
+			const accessToken = sessionStorage.getItem(G_ACCESS_TOKEN_SESSION);
+
+			if (!accessToken) {
+				return toast.error("Not logged in to Google", {
+					description: "Cannot sync since you are not logged in to Google",
+				});
+			}
+
 			if (newValue === prevValue) return;
 
 			clearTimeout(debounce);
